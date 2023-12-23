@@ -1,0 +1,52 @@
+---
+const asPath = Astro.props.currentUrl;
+
+const menuLinks = [
+    {
+      url: '/cats',
+      text: 'Cats'
+    },
+    {
+      url: '/life',
+      text: 'Life'
+    },
+    {
+      url: '/games',
+      text: 'Games'
+    },
+    {
+      url: '/tech',
+      text: 'Tech'
+    },
+    {
+      url: '/accessibility',
+      text: 'Accessibility'
+    },
+  ];
+---
+
+<nav aria-label="Main" class="text-black dark:text-white py-1 mt-2 nav-bar" id="main-menu-nav">
+  <ul class="flex flex-wrap justify-center lg:mt-4 p-0 mb-0">
+
+  {menuLinks.map((item, index) => {
+
+    const activeClass = (asPath === item.url) ? 'active-link': 'non-active-link';
+    {/* aria-current should be true when the menu parent is active */}
+    const ariaCurrentPath = (asPath.includes(item.url) && item.url !== '/') ? true : undefined;
+    {/* aria-current should be "page" when the actual page is active */}
+    const ariaCurrentPage = (asPath === item.url) ? 'page' : undefined;
+    {/* if the page is active, we want to use that, otherwise check for menu parent */}
+    const ariaCurrent = ariaCurrentPage ? ariaCurrentPage : ariaCurrentPath;
+
+    return (
+      <li class="m-3.5">
+        <a
+        class={`text-xl p-1 dark:text-shadow-text hover:text-lt-purple dark:hover:text-dk-blue-light hover:underline hover:decoration-2 hover:underline-offset-4 focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-black dark:focus:outline-white ${activeClass}`}
+        href={item.url} aria-current={ariaCurrent}>
+          {item.text}
+        </a>
+      </li>
+      );
+    })}
+  </ul>
+</nav>

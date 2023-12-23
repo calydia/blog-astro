@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NewestBlogListing from '../components/NewestBlogListing.astro';
+import OtherBlogListing from '../components/OtherBlogListing.astro';
+
+const blogFrontresponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
+  {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+      query GetBlogFrontPage {
+        page(id: 2) {
+          title
+          metaDescription
+          content
+        }
+      }
+      `
+    }),
+  });
+
+const frontJson = await blogFrontresponse.json();
+const frontContent = frontJson.data;
+
+const newestBlogResponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
+  {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+      query GetNewestArticle {
+        articles(limit: 1, category: 22) {
+          items {
+            title
+            slug
+            date
+            listingImage
+            category
+          }
+        }
+      }
+      `
+    }),
+  });
+
+const newestJson = await newestBlogResponse.json();
+const newestContent = newestJson.data;
+
+const otherBlogsResponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
+  {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+      query GetOtherArticles {
+        articles(limit: 100, category: 22, offset: 1) {
+          items {
+            title
+            slug
+            date
+            listingImage
+            category
+          }
+        }
+      }
+      `
+    }),
+  });
+
+const otherBlogsJson = await otherBlogsResponse.json();
+const otherBlogsContent = otherBlogsJson.data;
+---
+
+<Layout title={ frontContent.page.title } metaDescription={ frontContent.page.metaDescription }
+  currentType="front" currentUrl="front"
+>
+  <div class="max-w-[1564px] mx-auto md:px-8-px">
+    <div class="text-lt-gray dark:text-dk-gray py-2 px-4-px max-w-xl mx-auto md:py-6 md:px-8-px lg:max-w-4xl">
+      <h1 id="skip-target" class="block px-4-px font-bold text-center mt-8 lg:mt-16 mb-4 lg:mb-8 text-4xl md:text-6xl text-lt-gray dark:text-white">{ frontContent.page.title }</h1>
+      <div class="mx-4-px lead-content text-xl text-center mb-6 lg:mb-12 text-lt-gray dark:text-white"><Fragment set:html={ frontContent.page.content } /></div>
+    </div>
+  </div>
+
+  <section class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mt-0 xl:mx-auto" slot="blogs" aria-label="Blog listing">
+    {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
+    <ul class="grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-12" role="list">
+      <NewestBlogListing data={newestContent} />
+      <OtherBlogListing data={otherBlogsContent} />
+    </ul>
+  </section>
+</Layout>

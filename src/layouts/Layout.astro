@@ -1,0 +1,387 @@
+--- 
+import ThemeToggle from '../components/ThemeToggle.astro';
+import SkipLink from '../components/SkipLink.astro';
+import MainNavigation from '../components/MainNavigation.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Footer from '../components/Footer.astro';
+
+const { title, currentUrl, currentSlug, metaDescription, currentType } = Astro.props
+
+import '@fontsource/rock-salt';
+import '@fontsource/average-sans';
+import '@fontsource/lato';
+
+---
+<html lang="en">
+  <head>
+    <title>{ title }</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content={ title } />
+    <meta name="description" content={ metaDescription } />
+    <meta
+      property="og:description"
+      content={ metaDescription }
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:site_name" content="Blog - Sanna Mäkinen" />
+    <meta property="og:image" content="/some-share.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body class="font-sans hyphens-auto">
+    <header id="page-top" class="bg-gradient-to-r from-lt-perfume via-lt-blue-light to-lt-perfume
+      dark:from-dk-purple-header dark:via-dk-blue-header dark:to-dk-purple-header">
+      <SkipLink skipId="skip" skipTarget="skip-target" skipTextVariable="skip-link-text" />
+      <div class="flex flex-wrap justify-end gap-1">
+        <ThemeToggle />
+      </div>
+      <div class="text-center clear-both lg:clear:none">
+        <div>
+          <a href="/" class="inline-block border-y-4 border-transparent p-4
+            hover:border-y-4 hover:border-lt-purple dark:hover:border-dk-blue-light
+            focus:outline focus:outline-2 focus:outline-offset-4 	focus:outline-black dark:focus:outline-white">
+            <span class="block text-2xl font-title text-black dark:text-white dark:text-shadow-text">Sanna Mäkinen <span class="text-blue-tory dark:text-lt-perfume">-</span> Blog</span>
+            <span class="block text-lg mt-2 font-title leading-none text-blue-tory dark:text-lt-perfume dark:text-shadow-text">A peek into my life</span>
+        </a>
+        </div>
+      </div>
+      <MainNavigation currentUrl={ currentUrl } />
+    </header>
+    { (currentType !== "front")  ?
+      <Breadcrumb currentTitle={ title } currentUrl={ currentUrl } currentSlug={ currentSlug } />
+    : null }
+    <main class="text-lg lg:text-xl">
+      <slot />
+    </main>
+    <slot name="blogs" />
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  :root {
+    --quote-icon: url('/icons/iconmonstr-quote-light.svg');
+    --external-icon: url('/icons/icons8-external-link-light.svg');
+    --exclamation-icon: url('/icons/hi-exclamation-circle-light.svg');
+    --nav-background: rgba(255,255,255,0.2);
+    --nav-border: rgba(255,255,255,0.4);
+    --menu-header-background: rgba(0,0,0,0.4);
+  }
+  :root.dark {
+    --quote-icon: url('/icons/iconmonstr-quote-dark.svg');
+    --external-icon: url('/icons/icons8-external-link-dark.svg');
+    --exclamation-icon: url('/icons/hi-exclamation-circle-dark.svg');
+    --nav-background: rgba(0,0,0,0.1);
+    --nav-border: rgba(0,0,0,0.4);
+    --menu-header-background: rgba(255,255,255,0.4);
+  }
+
+  .light .main-image--wrapper::before{
+    background-color: rgba(230, 200, 252, 0.2);
+    background: linear-gradient(to right, rgba(187, 201, 247, 0.4) 0%, rgba(230,202, 252, 0.4) 50%, rgba(187, 201, 247, 0.4) 100%);
+  }
+
+  .dark .main-image--wrapper::before {
+    background-color: rgba(53, 3, 94, 0.2);
+    background: linear-gradient(to right, rgba(24, 57, 154, 0.3) 0%, rgba(53, 3, 94, 0.3) 50%, rgba(24, 57, 154, 0.3) 100%);
+  }
+
+  .gradient-border-light {
+    border-image: linear-gradient(to right, #46037e 0%, RoyalBlue 50%, #46037e 100%);
+    border-image-slice: 1;
+  }
+
+  .gradient-border-dark {
+    border-image: linear-gradient(to right, #46037e 0%, RoyalBlue 50%, #46037e 100%);
+    border-image-slice: 1;
+  }
+
+  .text-shadow-text {
+    text-shadow: rgb(0 0 0 / 46%) 4px 4px 6px;
+  }
+
+  .light {
+    @apply bg-white;
+  }
+  .dark {
+    @apply bg-dk-blue-darkest;
+  }
+
+  .dark .logo-dark,
+  .light .logo-light {
+    @apply hidden invisible;
+  }
+
+  .light .darkmode-light {
+    @apply hidden invisible;
+  }
+
+  .dark .darkmode-dark{
+    @apply hidden invisible;
+  }
+
+  p {
+    @apply my-8 leading-relaxed font-light;
+  }
+
+  .post-link {
+    @apply no-underline;
+  }
+
+  .post-link:hover .post-title {
+    @apply text-lt-purple dark:text-dk-blue-light underline decoration-2 underline-offset-4;
+  }
+
+  h2 {
+    @apply text-2xl lg:text-3xl font-bold mt-8;
+  }
+
+  h3 {
+    @apply text-xl lg:text-2xl font-bold mt-8;
+  }
+
+  h4 {
+    @apply text-lg lg:text-xl font-bold mt-8;
+  }
+
+  .custom-grid {
+    grid-template-columns: 1fr 280px;
+  }
+
+  blockquote {
+    @apply relative bg-slate-300 dark:bg-slate-900 my-8 p-6 border-solid border-l-8 border-l-lt-purple dark:border-l-dk-blue-light;
+  }
+
+  .box p:first-of-type,
+  blockquote p:first-of-type {
+    @apply mt-0;
+  }
+
+  .box p:last-of-type {
+    @apply mb-0;
+  }
+
+  blockquote cite {
+    @apply block text-base not-italic mt-4 lg:text-right;
+  }
+
+  blockquote::after {
+    @apply block absolute right-[-4px] md:right-[-2rem] top-[-2rem] text-7xl bg-no-repeat bg-center h-16 w-16;
+
+    background-image: var(--quote-icon);
+    background-size: 4rem;
+    content: '';
+  }
+
+  code {
+    @apply text-base border-solid border py-0.5 px-1 mx-0.5 inline-block bg-lt-code-bg border-lt-code-border dark:bg-dk-code-bg dark:border-dk-code-border;
+  }
+
+  main {
+    @apply text-lg lg:text-xl;
+  }
+
+
+  .breadcrumb a,
+  #main-menu-nav a,
+  main a,
+  footer a {
+    @apply text-lt-blue-dark dark:text-dk-blue-light;
+    @apply hover:underline hover:underline-offset-4 hover:text-lt-purple hover:decoration-2 dark:hover:text-wheat;
+    @apply focus:text-lt-purple dark:focus:text-wheat focus:outline focus:outline-2 focus:outline-offset-2 focus:no-underline focus:outline-black dark:focus:outline-white;
+  }
+
+  .glossary-term ul,
+  .bodytext ul,
+  .box ul {
+    @apply list-disc ml-5 leading-loose;
+  }
+
+  a[aria-current=true],
+  a[aria-current="page"],
+  #main-menu-nav a[aria-current="page"],
+  .active-link {
+    @apply underline decoration-4 underline-offset-4 text-lt-purple dark:text-wheat;
+    @apply hover:decoration-2;
+  }
+
+  button[aria-current="true"] {
+    @apply underline decoration-4 underline-offset-4 text-lt-purple dark:text-wheat;
+    @apply hover:decoration-2;
+  }
+
+  ol {
+    @apply list-decimal leading-normal;
+
+    margin-block-start: 0.25em;
+    margin-block-end: 0.25em;
+    margin-inline-start: 1.5em;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+  }
+
+  ol, ul {
+    @apply font-light;
+  }
+
+  ol li {
+    @apply my-4;
+  }
+
+  blockquote ul {
+    @apply list-disc;
+  }
+
+  blockquote ol,
+  blockquote ul {
+    margin-block-start: 0.25em;
+    margin-block-end: 0.25em;
+    margin-inline-start: 1.5em;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+  }
+
+  blockquote p:last-of-type {
+    @apply mb-0;
+  }
+
+  .icon--footer {
+    @apply fill-lt-blue-dark dark:fill-dk-blue-light;
+  }
+
+  .lang-switcher a[aria-current="page"] {
+    @apply underline decoration-4 underline-offset-4 text-lt-purple dark:text-wheat;
+    @apply hover:decoration-2;
+  }
+
+  .lang-switcher a {
+    @apply hover:underline hover:text-lt-purple hover:decoration-4 dark:hover:text-wheat;
+  }
+
+  .button {
+    @apply bg-lt-blue-dark text-white border-4 border-transparent dark:bg-dk-blue-light dark:text-black py-3 px-5;
+    @apply hover:border-4 hover:border-lt-blue-dark hover:bg-transparent hover:text-lt-blue-dark dark:hover:text-dk-blue-light dark:hover:border-dk-blue-light;
+    @apply focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-black dark:focus:outline-white;
+  }
+
+  .button--alternative {
+    @apply text-lt-blue-dark dark:text-dk-blue-light py-2 px-3;
+  }
+
+  .item--transition {
+    @apply transition-colors ease-in-out duration-300;
+    @apply hover:transition-colors hover:ease-in-out hover:duration-300;
+  }
+
+  .hover--border {
+    @apply border-y-4 border-transparent;
+    @apply hover:border-y-4 hover:border-lt-purple dark:hover:border-dk-blue-light;
+    @apply focus:outline focus:outline-2 focus:outline-offset-4	focus:outline-black dark:focus:outline-white;
+  }
+
+  .example-section p:first-child {
+    @apply mt-0;
+  }
+
+  /* Demo content */
+  .demo-no-focus:focus {
+    @apply hidden;
+  }
+  .pseudo-test-triangle-problem,
+  .pseudo-test-triangle-better {
+    @apply flex;
+  }
+  .pseudo-test-triangle-problem::before {
+    content: '\25BA' !important;
+    display: block !important;
+    height: 10px !important;
+    padding-right: 30px !important;
+    width: 10px !important;
+  }
+  .pseudo-test-triangle-better::before {
+    content: '\25BA' / '';
+    display: block;
+    height: 10px;
+    padding-right: 30px;
+    width: 10px;
+  }
+
+  .list-no-style {
+    list-style: none;
+  }
+  .list-css-fix li {
+    @apply list-none;
+  }
+  .list-css-fix li::before {
+    content: "\200B";
+  }
+
+  table {
+    @apply border-2 border-black dark:border-white p-2;
+  }
+
+  th {
+    @apply font-bold p-4 border-2 border-black dark:border-white;
+  }
+
+  td {
+    @apply p-4 border-2 border-black dark:border-white;
+  }
+
+  table caption {
+    @apply text-center my-2;
+  }
+
+  .table figcaption {
+    @apply my-2;
+  }
+
+  a.no-focus:focus {
+    @apply border-none text-lt-blue-dark dark:text-dk-blue-light underline underline-offset-4 decoration-2;
+
+    outline: none !important;
+  }
+
+  .example-section select {
+    @apply p-2 text-black border-2 border-black;
+  }
+
+  main a {
+    @apply underline;
+  }
+
+  main a[href^="https://"]::after {
+    @apply inline-block bg-no-repeat bg-right-bottom h-6 w-6;
+
+    background-image: var(--external-icon);
+    background-size: 1.25rem 1.25rem;
+    content: '';
+  }
+
+  .demo-select {
+    @apply focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-black dark:focus:outline-white;
+  }
+
+  .nav-bar {
+    @apply lg:pb-4 ;
+    background-color: var(--nav-background);
+    border-top: 1px solid var(--nav-border);
+  }
+  
+  .light .gradient-border-demo {
+    border-image: linear-gradient(to right, #46037e 0%, RoyalBlue 50%, #46037e 100%);
+    border-image-slice: 1;
+  }
+
+  .dark .gradient-border-demo {
+    border-image: linear-gradient(to right, #46037e 0%, RoyalBlue 50%, #46037e 100%);
+    border-image-slice: 1;
+  }
+</style>

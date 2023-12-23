@@ -1,0 +1,18 @@
+export default interface Page {
+  title: string,
+  authorContent: string,
+  authorImage: string,
+  authorName: string,
+  category: string,
+  content: string,
+  date: string,
+  id: string,
+  imageCredits: string,
+  slug: string,
+  published: string,
+  mainImage: string,
+  listingImage: string,
+  metaDescription: string,
+  boxTitle: string,
+  boxContent: string,
+}
