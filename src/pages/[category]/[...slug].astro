@@ -49,7 +49,7 @@ type Props = Page;
 
 const page = Astro.props;
 ---
-<LayoutPost title={ page.title } currentUrl={ `${page.category.toLowerCase()}/${page.slug.substring(1)}` } currentSlug={ page.slug }
+<LayoutPost title={ page.title } currentUrl={ `/${page.category.toLowerCase()}/${page.slug.substring(1)}` } currentSlug={ page.slug }
   metaDescription={ page.metaDescription } mainImage={ page.mainImage } authorImage={ page.authorImage } authorName={ page.authorName } authorContent={ page.authorContent }
   categoryURL={ page.category.toLowerCase() } categoryName={ page.category }
   >
