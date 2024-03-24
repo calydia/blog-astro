@@ -26,7 +26,7 @@ import type BlogData from '../interfaces/blogHighlight';
           <span class="block text-base md:text-xl pb-4">
             {dayjs(node.date)
               .format(`MMMM DD, YYYY`)}{' '}
-            <span aria-hidden="true">|</span> <span class="sr-only">in category</span> {node.category}
+            <span aria-hidden="true">|</span>{' '}<span class="sr-only">in category</span> {node.category}
           </span>
         </div>
       </a>
