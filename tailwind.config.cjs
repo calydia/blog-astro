@@ -5,7 +5,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'lt-gray': '#333333',
+        'lt-bg': '#fafafa',
+        'lt-gray': '#4D4D4D',
+        'lt-gray-heading': '#333333',
         'lt-blue-light': '#bbc9f7',
         'lt-blue-middle': '#dfe7fc',
         'lt-blue-dark': '#033573',
@@ -17,13 +19,15 @@ module.exports = {
         'dk-blue-header': '#18399A',
         'dk-blue-royal': '#4169e1',
         'dk-purple': '#18032b',
-        'dk-gray': '#cfcfcf',
+        'dk-gray-heading': '#cfcfcf',
+        'dk-gray': '#ABABAB',
         'wheat': '#f5deb3',
         'blue-tory': '#18399a',
         'lt-code-bg': '#dfe7fc',
         'lt-code-border': '#bbc9f7',
         'dk-code-bg': '#070038',
-        'dk-code-border': '#18399a'
+        'dk-code-border': '#18399a',
+        'lt-gray-box': '#383838'
       },
       fontFamily: {
         'title': ['Satisfy', 'cursive'],

@@ -80,8 +80,8 @@ import '@fontsource/lato';
                   class="rounded-full mx-auto"
                 />
               </div>
-              <span class="font-title text-2xl">{ authorName }</span>
-              <div class="text-lg max-w-xl mx-auto"><Fragment set:html={ authorContent } /></div>
+              <span class="font-title text-2xl text-lt-gray-box dark:text-dk-gray">{ authorName }</span>
+              <div class="text-lg max-w-xl mx-auto text-lt-gray-box dark:text-dk-gray"><Fragment set:html={ authorContent } /></div>
             </div>
           </article>
         </aside>
@@ -167,6 +167,10 @@ import '@fontsource/lato';
 
   .post-link:hover .post-title {
     @apply text-lt-purple dark:text-dk-blue-light underline decoration-2 underline-offset-4;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-lt-gray-heading dark:text-dk-gray-heading;
   }
 
   h2 {
