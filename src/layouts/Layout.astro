@@ -111,7 +111,7 @@ import '@fontsource/lato';
   }
 
   .light {
-    @apply bg-white;
+    @apply bg-lt-bg;
   }
   .dark {
     @apply bg-dk-blue-darkest;
@@ -140,6 +140,10 @@ import '@fontsource/lato';
 
   .post-link:hover .post-title {
     @apply text-lt-purple dark:text-dk-blue-light underline decoration-2 underline-offset-4;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-lt-gray-heading dark:text-dk-gray-heading;
   }
 
   h2 {
