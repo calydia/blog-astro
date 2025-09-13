@@ -393,4 +393,15 @@ import '@fontsource/lato';
     border-image: linear-gradient(to right, #46037e 0%, RoyalBlue 50%, #46037e 100%);
     border-image-slice: 1;
   }
+
+  .dark .logo-dark,
+  .light .logo-light {
+    @apply hidden invisible;
+  }
+  
+  footer .logo-light,
+  footer .logo-dark {
+    @apply h-auto w-24;
+    @apply md:w-28;
+  }
 </style>

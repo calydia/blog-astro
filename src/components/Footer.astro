@@ -1,6 +1,5 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { Image } from 'astro:assets';
 ---
 
 <footer class="p-4-px lg:px-8-px lg:py-4-px border-t-8 border-solid border-blue-tory bg-lt-blue-light dark:bg-dk-purple">
@@ -21,14 +20,34 @@ import { Image } from 'astro:assets';
       </a>
     </div>
     <div class="flex items-center">
-      <a
-        href="https://a11y.ing/en"
-        rel="noopener noreferrer"
-        class="font-light"
-      >
-        My accessibility site
-      </a>
-    </div>
+      <div class="flex flex-col">
+        <div class="md:-ml-4">
+          <Icon name="a11ying-dark" class="logo-dark" height="173" width="348" aria-hidden="true" />
+          <Icon name="a11ying-light" class="logo-light" height="173" width="348" aria-hidden="true" />
+        </div>
+        <nav aria-label="A11ying sites">
+          <ul class="m-0 p-0 pt-2">
+            <li>
+              <a
+                href="https://a11y.ing"
+                rel="noopener noreferrer"
+                class="font-light block py-2"
+              >
+                I would if I could
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://wcag.a11y.ing"
+                rel="noopener noreferrer"
+                class="font-light block py-2"
+              >
+                Almost, but not quite
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
   </div>
   <script is:inline src="/skip-content.js"></script>
 </footer>
