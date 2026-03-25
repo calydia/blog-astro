@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Colors */
+  --color-lt-bg: #fafafa;
+  --color-lt-gray: #4D4D4D;
+  --color-lt-gray-heading: #333333;
+  --color-lt-blue-light: #bbc9f7;
+  --color-lt-blue-middle: #dfe7fc;
+  --color-lt-blue-dark: #033573;
+  --color-lt-purple: #54007b;
+  --color-lt-perfume: #e6cafc;
+  --color-dk-blue-light: #ade5f8;
+  --color-dk-blue-darkest: #010017;
+  --color-dk-purple-header: #35035e;
+  --color-dk-blue-header: #18399A;
+  --color-dk-blue-royal: #4169e1;
+  --color-dk-purple: #18032b;
+  --color-dk-gray-heading: #cfcfcf;
+  --color-dk-gray: #ABABAB;
+  --color-wheat: #f5deb3;
+  --color-blue-tory: #18399a;
+  --color-lt-code-bg: #dfe7fc;
+  --color-lt-code-border: #bbc9f7;
+  --color-dk-code-bg: #070038;
+  --color-dk-code-border: #18399a;
+  --color-lt-gray-box: #383838;
+
+  /* Font families */
+  --font-title: "Satisfy", cursive;
+  --font-sans: "Atkinson Hyperlegible", Arial, sans-serif;
+  --font-menu: "Lato", Arial, sans-serif;
+
+  /* Custom spacing */
+  --spacing-4-px: 16px;
+  --spacing-6-px: 24px;
+  --spacing-8-px: 32px;
+  --spacing-12-px: 48px;
+
+  /* Custom heights */
+  --height-125-px: 125px;
+  --height-250-px: 250px;
+  --height-350-px: 350px;
+
+  /* Max widths */
+  --max-width-screen-menu: 100rem;
+
+  /* Outline offset */
+  --outline-offset-15: 15px;
+}

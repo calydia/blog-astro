@@ -10,6 +10,7 @@ const { title, currentUrl, currentSlug, metaDescription, currentType } = Astro.p
 import '@fontsource/satisfy';
 import '@fontsource/atkinson-hyperlegible';
 import '@fontsource/lato';
+import '../styles/global.css';
 
 ---
 <html lang="en">
@@ -67,9 +68,7 @@ import '@fontsource/lato';
 </html>
 
 <style is:global>
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+  @reference "../styles/global.css";
 
   :root {
     --quote-icon: url('/icons/iconmonstr-quote-light.svg');
