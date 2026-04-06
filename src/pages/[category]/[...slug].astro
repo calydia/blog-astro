@@ -50,6 +50,6 @@ const pageTags = normalizeSecondaryCategories(page.secondaryCategories);
     </div>
   : null }
   <div class="text-xl bodytext"><Fragment set:html={ page.content } /></div>
-  <div class="text-base"><Fragment set:html={ page.imageCredits } /></div>
+  <div class="text-base credits"><Fragment set:html={`Image credit: ${page.imageCredits} `} /></div>
   <RelatedPosts posts={page.relatedPosts} />
 </LayoutPost>

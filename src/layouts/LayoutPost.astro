@@ -86,7 +86,7 @@ import '../styles/global.css';
         <div class="text-lt-gray dark:text-dk-gray py-2 px-4-px max-w-xl mx-auto col-span-2 md:col-span-1 md:m-0 md:py-6 md:px-8-px lg:max-w-4xl">
           <slot />
         </div>
-        <aside class="mt-8 col-span-2 md:col-span-1 md:w-[280px] md:mx-auto md:mt-20" slot="aside">
+        <aside class="my-8 mx-4-px col-span-2 md:col-span-1 md:w-[280px] md:mx-auto md:mt-20 md:mb-0" slot="aside">
           <ArticleSidebar
             authorImage={authorImage}
             authorName={authorName}
@@ -429,5 +429,9 @@ import '../styles/global.css';
   footer .logo-dark {
     @apply h-auto w-24;
     @apply md:w-28;
+  }
+
+  .credits p, .credits a{
+    @apply inline;
   }
 </style>
