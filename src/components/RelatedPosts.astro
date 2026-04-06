@@ -15,7 +15,7 @@ const { posts } = Astro.props as { posts: BlogData[] };
       {posts.map((post) => (
         <li>
           <a href={`/${post.category.toLowerCase()}${post.slug}`}
-            class="block border-2 border-transparent post-link hover:border-lt-purple dark:hover:border-dk-blue-light focus:outline focus:outline-4 focus:outline-offset-15 focus:outline-black dark:focus:outline-white"
+            class="related-post-card block post-link no-underline hover:no-underline focus:no-underline focus:outline focus:outline-4 focus:outline-offset-15 focus:outline-black dark:focus:outline-white"
           >
             <Image
               src={post.listingImage}
@@ -37,3 +37,13 @@ const { posts } = Astro.props as { posts: BlogData[] };
     </ul>
   </section>
 )}
+
+<style>
+  .related-post-card,
+  .related-post-card:hover,
+  .related-post-card:focus,
+  .related-post-card:focus-visible {
+    color: inherit;
+    text-decoration: none;
+  }
+</style>

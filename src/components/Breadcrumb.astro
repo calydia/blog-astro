@@ -8,7 +8,7 @@ const categoryName = Astro.props.categoryName;
 <nav aria-label="Breadcrumbs" class="col-span-2 w-full max-w-[1564px] p-4-px pb-0 mx-auto text-lt-gray dark:text-dk-gray md:px-8-px text-base">
   <ul class="block list-none m-0 p-0">
     <li class="inline">
-      <a href="/" class="underline underline-offset-4 decoration-2 text-lt-blue-dark dark:text-dk-blue-light hover:text-lt-purple hover:decoration-4 dark:hover:text-wheat focus:text-black dark:focus:text-white focus:outline focus:outline-2 focus:outline-offset-8 focus:no-underline focus:outline-black dark:focus:outline-white">
+      <a href="/" class="breadcrumb-link underline underline-offset-4 text-lt-blue-dark dark:text-dk-blue-light">
         Home
       </a>
       <span class="mx-2" aria-hidden="true">/</span>
@@ -16,7 +16,7 @@ const categoryName = Astro.props.categoryName;
 
     { currentSlug !== categoryURL ?
       <li class="inline">
-        <a href={`/${ categoryURL }`} class="underline underline-offset-4 decoration-2 text-lt-blue-dark dark:text-dk-blue-light hover:text-lt-purple hover:decoration-4 dark:hover:text-wheat focus:text-black dark:focus:text-white focus:outline focus:outline-2 focus:outline-offset-8 focus:no-underline focus:outline-black dark:focus:outline-white">
+        <a href={`/${ categoryURL }`} class="breadcrumb-link underline underline-offset-4 text-lt-blue-dark dark:text-dk-blue-light">
           { categoryName }  
         </a>
         <span class="mx-2" aria-hidden="true">/</span>
@@ -31,3 +31,36 @@ const categoryName = Astro.props.categoryName;
     }
   </ul>
 </nav>
+
+<style>
+  @reference "../styles/global.css";
+
+  .breadcrumb-link {
+    text-decoration-thickness: 2px;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--color-lt-purple);
+    text-decoration-thickness: 4px;
+  }
+
+  :global(.dark) .breadcrumb-link:hover {
+    color: var(--color-wheat);
+  }
+
+  .breadcrumb-link:focus,
+  .breadcrumb-link:focus-visible {
+    color: var(--color-black);
+    outline-width: 2px;
+    outline-style: solid;
+    outline-offset: 8px;
+    outline-color: var(--color-black);
+    text-decoration: none;
+  }
+
+  :global(.dark) .breadcrumb-link:focus,
+  :global(.dark) .breadcrumb-link:focus-visible {
+    color: var(--color-white);
+    outline-color: var(--color-white);
+  }
+</style>

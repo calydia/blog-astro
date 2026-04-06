@@ -1,11 +1,13 @@
 ---
 import LayoutPost from '../../layouts/LayoutPost.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
+import ArticleToc from '../../components/ArticleToc.astro';
 import TagList from '../../components/TagList.astro';
 import dayjs from 'dayjs';
 import type Page from '../../interfaces/page';
 import type BlogData from '../../interfaces/blogHighlight';
 import { fetchArticles } from '../../utils/blogApi';
+import { buildArticleToc } from '../../utils/articleToc';
 import { getCategoryDiscoveryConfig, getFeaturedCategoryPost } from '../../utils/categoryDiscovery';
 import { getReadingTime } from '../../utils/readingTime';
 import { getRelatedPosts, normalizeSecondaryCategories } from '../../utils/tags';
@@ -31,9 +33,10 @@ type Props = Page & { relatedPosts: BlogData[]; featuredCategoryPost?: BlogData 
 
 const page = Astro.props as Props;
 const pageTags = normalizeSecondaryCategories(page.secondaryCategories);
+const processedArticle = buildArticleToc(page.content);
 ---
 <LayoutPost title={ page.title } currentUrl={ `/${page.category.toLowerCase()}/${page.slug.substring(1)}` } currentSlug={ page.slug }
-  metaDescription={ page.metaDescription } mainImage={ page.mainImage } authorImage={ page.authorImage } authorName={ page.authorName } authorContent={ page.authorContent }
+  metaDescription={ page.metaDescription } mainImage={ page.mainImage } date={page.date} authorImage={ page.authorImage } authorName={ page.authorName } authorContent={ page.authorContent }
   categoryURL={ page.category.toLowerCase() } categoryName={ page.category } featuredCategoryPost={page.featuredCategoryPost} relatedPosts={page.relatedPosts}
   >
   <h1 id="skip-target" class="text-3xl font-bold mt-4 mb-2 lg:text-4xl">{ page.title }</h1>
@@ -43,13 +46,14 @@ const pageTags = normalizeSecondaryCategories(page.secondaryCategories);
     | { getReadingTime(page.content) }
   </span>
   <TagList tags={pageTags} />
+  <ArticleToc items={processedArticle.items} />
   {page.boxContent ?
     <div class="box grid gap-6 border-solid border-4 p-8-px my-8 bg-lt-code-bg border-lt-code-border dark:bg-dk-code-bg dark:border-dk-code-border">
       <h2 class="m-0">{page.boxTitle}</h2>
       <div><Fragment set:html={ page.boxContent } /></div>
     </div>
   : null }
-  <div class="text-xl bodytext"><Fragment set:html={ page.content } /></div>
+  <div class="text-xl bodytext"><Fragment set:html={ processedArticle.content } /></div>
   <div class="text-base credits"><Fragment set:html={`Image credit: ${page.imageCredits} `} /></div>
   <RelatedPosts posts={page.relatedPosts} />
 </LayoutPost>

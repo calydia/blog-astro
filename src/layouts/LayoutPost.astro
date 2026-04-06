@@ -13,6 +13,7 @@ const {
   currentSlug,
   metaDescription,
   mainImage,
+  date,
   authorImage,
   authorName,
   authorContent,
@@ -23,6 +24,98 @@ const {
 } = Astro.props
 const siteRoot = 'https://blog.sanna.ninja';
 const normalizedUrl = (currentUrl === '/' || currentUrl === '') ? `${siteRoot}/` : `${siteRoot}${currentUrl}/`;
+const shareImageUrl = `${siteRoot}/some-share.jpg`;
+const personId = `${siteRoot}/#person`;
+const organizationId = `${siteRoot}/#organization`;
+const websiteId = `${siteRoot}/#website`;
+const articleImageUrl = mainImage || shareImageUrl;
+const publishedDate = date;
+
+const personSchema = {
+  '@type': 'Person',
+  '@id': personId,
+  name: authorName || 'Sanna Kramsi',
+  url: `${siteRoot}/`,
+  image: authorImage || shareImageUrl,
+  description: authorContent?.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(),
+  affiliation: {
+    '@id': organizationId,
+  },
+};
+
+const organizationSchema = {
+  '@type': 'Organization',
+  '@id': organizationId,
+  name: 'A11ying with Sanna',
+  url: 'https://a11y.ing/',
+};
+
+const websiteSchema = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  url: `${siteRoot}/`,
+  name: 'Sanna Kramsi - Blog',
+  publisher: {
+    '@id': personId,
+  },
+};
+
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  '@id': `${normalizedUrl}#breadcrumb`,
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: `${siteRoot}/`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: categoryName,
+      item: `${siteRoot}/${categoryURL}/`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: title,
+      item: normalizedUrl,
+    },
+  ],
+};
+
+const blogPostingSchema = {
+  '@type': 'BlogPosting',
+  '@id': `${normalizedUrl}#blogposting`,
+  headline: title,
+  description: metaDescription,
+  image: articleImageUrl,
+  url: normalizedUrl,
+  mainEntityOfPage: normalizedUrl,
+  datePublished: publishedDate,
+  author: {
+    '@id': personId,
+  },
+  publisher: {
+    '@id': personId,
+  },
+  articleSection: categoryName,
+  isPartOf: {
+    '@id': websiteId,
+  },
+};
+
+const postSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    personSchema,
+    organizationSchema,
+    websiteSchema,
+    breadcrumbSchema,
+    blogPostingSchema,
+  ],
+};
 
 import '@fontsource/satisfy';
 import '@fontsource/atkinson-hyperlegible';
@@ -54,6 +147,7 @@ import '../styles/global.css';
     <link rel="icon" href="/favicons/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="/manifest.json">
     <link rel="canonical" href={normalizedUrl} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postSchema)} />
   </head>
   <body class="font-sans hyphens-auto">
     <header id="page-top" class="bg-gradient-to-r from-lt-perfume via-lt-blue-light to-lt-perfume
@@ -232,7 +326,6 @@ import '../styles/global.css';
   }
 
 
-  .breadcrumb a,
   #main-menu-nav a,
   main a,
   footer a {

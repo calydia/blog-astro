@@ -1,0 +1,42 @@
+---
+const { items } = Astro.props as { items: Array<{ id: string; label: string }> };
+---
+
+{items.length >= 3 && (
+  <nav aria-labelledby="article-toc-heading" class="article-toc box border-solid border-2 p-4 my-8 bg-lt-code-bg border-lt-code-border dark:bg-dk-code-bg dark:border-dk-code-border">
+    <h2 id="article-toc-heading" class="m-0 mt-0! text-base lg:text-lg">On this page</h2>
+    <ul class="m-0 mt-3 p-0 list-none grid gap-1.5" role="list">
+      {items.map((item) => (
+        <li>
+          <a href={`#${item.id}`} class="text-base no-underline hover:underline hover:underline-offset-4">
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .article-toc h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 64rem) {
+    .article-toc h2 {
+      font-size: 1.125rem;
+    }
+  }
+
+  .article-toc ul {
+    gap: 0.2rem;
+  }
+
+  .article-toc li,
+  .article-toc a {
+    line-height: 1.5;
+  }
+</style>
