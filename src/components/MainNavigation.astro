@@ -28,7 +28,7 @@ const menuLinks = [
 <nav aria-label="Main" class="text-black dark:text-white py-1 mt-2 nav-bar" id="main-menu-nav">
   <ul class="flex flex-wrap justify-center lg:mt-2 p-0 mb-0">
 
-  {menuLinks.map((item, index) => {
+  {menuLinks.map((item) => {
 
     const activeClass = (asPath === item.url) ? 'active-link': 'non-active-link';
     {/* aria-current should be true when the menu parent is active */}
