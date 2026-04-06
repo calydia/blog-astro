@@ -2,91 +2,68 @@
 import Layout from '../layouts/Layout.astro';
 import NewestBlogListing from '../components/NewestBlogListing.astro';
 import OtherBlogListing from '../components/OtherBlogListing.astro';
+import CategorySpotlightCard from '../components/CategorySpotlightCard.astro';
+import type BlogData from '../interfaces/blogHighlight';
+import { fetchArticles, fetchPageContent } from '../utils/blogApi';
+import { categoryDiscoveryConfig, getFeaturedCategoryPost } from '../utils/categoryDiscovery';
 
-const blogFrontresponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
-  {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      query: `
-      query GetBlogFrontPage {
-        page(id: 1) {
-          title
-          metaDescription
-          content
-        }
-      }
-      `
-    }),
-  });
-
-const frontJson = await blogFrontresponse.json();
-const frontContent = frontJson.data;
-
-const newestBlogResponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
-  {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      query: `
-      query GetNewestArticle {
-        articles(limit: 1) {
-          items {
-            title
-            slug
-            date
-            listingImage
-            category
-          }
-        }
-      }
-      `
-    }),
-  });
-
-const newestJson = await newestBlogResponse.json();
-const newestContent = newestJson.data;
-
-const otherBlogsResponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
-  {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      query: `
-      query GetOtherArticles {
-        articles(limit: 100, offset: 1) {
-          items {
-            title
-            slug
-            date
-            listingImage
-            category
-          }
-        }
-      }
-      `
-    }),
-  });
-
-const otherBlogsJson = await otherBlogsResponse.json();
-const otherBlogsContent = otherBlogsJson.data;
+const frontContent = await fetchPageContent(1);
+const allPostsResponse = await fetchArticles({ limit: 101, fieldSet: 'listing' });
+const allPosts = allPostsResponse.articles.items as BlogData[];
+const newestPosts = allPosts.slice(0, 1);
+const otherPosts = allPosts.slice(1);
+const primaryCategories = categoryDiscoveryConfig.filter((category) => category.weight === 'primary');
+const secondaryCategories = categoryDiscoveryConfig.filter((category) => category.weight === 'secondary');
 ---
 
 <Layout title={ frontContent.page.title } metaDescription={ frontContent.page.metaDescription }
-  currentType="front" currentUrl="front"
+  currentType="front" currentUrl="/"
 >
   <div class="max-w-[1564px] mx-auto md:px-8-px">
-    <div class="text-lt-gray dark:text-dk-gray py-2 px-4-px max-w-xl mx-auto md:py-6 md:px-8-px lg:max-w-4xl">
-      <h1 id="skip-target" class="block px-4-px font-bold text-center mt-8 lg:mt-16 mb-4 lg:mb-8 text-4xl md:text-6xl text-lt-gray-heading dark:text-dk-gray-heading">{ frontContent.page.title }</h1>
-      <div class="mx-4-px lead-content text-xl text-center mb-6 lg:mb-12 text-lt-gray dark:text-dk-gray"><Fragment set:html={ frontContent.page.content } /></div>
+    <div class="text-lt-gray dark:text-dk-gray pt-2 pb-4 px-4-px max-w-xl mx-auto md:pt-4 md:pb-6 md:px-8-px lg:max-w-4xl">
+      <h1 id="skip-target" class="block px-4-px font-bold text-center mt-6 lg:mt-10 mb-3 lg:mb-5 text-4xl md:text-6xl text-lt-gray-heading dark:text-dk-gray-heading">{ frontContent.page.title }</h1>
+      <div class="mx-4-px lead-content text-lg md:text-xl text-center mb-2 lg:mb-4 text-lt-gray dark:text-dk-gray"><Fragment set:html={ frontContent.page.content } /></div>
     </div>
   </div>
 
+  <section aria-labelledby="start-exploring-heading" class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mx-auto">
+    <div class="text-center max-w-4xl mx-auto mb-6">
+      <h2 id="start-exploring-heading" class="text-3xl lg:text-4xl font-bold mt-0 mb-2">Start exploring</h2>
+      <p class="my-0 text-base md:text-lg lg:text-xl text-lt-gray dark:text-dk-gray">
+        If you are new here, start with the topics that best match what you want to read.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+      {primaryCategories.map((category) => (
+        <CategorySpotlightCard
+          category={category}
+          featuredPost={getFeaturedCategoryPost(allPosts, category.featuredSlug)}
+        />
+      ))}
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2 xl:grid-cols-3 lg:gap-8">
+      {secondaryCategories.map((category) => (
+        <CategorySpotlightCard
+          category={category}
+          featuredPost={getFeaturedCategoryPost(allPosts, category.featuredSlug)}
+        />
+      ))}
+    </div>
+  </section>
+
 	<section class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mt-0 xl:mx-auto" slot="blogs" aria-label="Blog listing">
+      <div class="text-center max-w-4xl mx-auto mb-8">
+        <h2 class="text-3xl lg:text-4xl font-bold mt-0 mb-3">Latest posts</h2>
+        <p class="my-0 text-lg lg:text-xl text-lt-gray dark:text-dk-gray">
+          Or jump into the newest writing across every category.
+        </p>
+      </div>
 		{/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
 		<ul class="grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-12" role="list">
-			<NewestBlogListing data={newestContent} />
-			<OtherBlogListing data={otherBlogsContent} />
+			<NewestBlogListing posts={newestPosts} />
+			<OtherBlogListing posts={otherPosts} />
 		</ul>
 	</section>
 </Layout>

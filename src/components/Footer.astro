@@ -10,15 +10,24 @@ import { Icon } from 'astro-icon/components';
     </button>
   </div>
   <div class="md:flex md:justify-between max-w-[1500px] mx-auto">
-    <div class="flex items-center">
-      <a
-        href="https://sanna.a11y.ing"
-        rel="noopener noreferrer"
-        class="font-light"
-      >
-        About me
-      </a>
-    </div>
+    <nav aria-label="About this site">
+      <ul class="m-0 p-0 pt-2">
+        <li>
+          <a
+            href="https://sanna.a11y.ing"
+            rel="noopener noreferrer"
+            class="font-light block py-2"
+          >
+            About me
+          </a>
+        </li>
+        <li>
+          <a href="/rss.xml" class="font-light block py-2">
+            RSS feed
+          </a>
+        </li>
+      </ul>
+    </nav>
     <div class="flex items-center">
       <div class="flex flex-col">
         <div class="md:-ml-4">

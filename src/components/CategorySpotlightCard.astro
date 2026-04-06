@@ -1,0 +1,91 @@
+---
+import type BlogData from '../interfaces/blogHighlight';
+import type { CategoryDiscoveryConfig } from '../utils/categoryDiscovery';
+
+const {
+  category,
+  featuredPost,
+} = Astro.props as {
+  category: CategoryDiscoveryConfig;
+  featuredPost?: BlogData;
+};
+
+const isPrimary = category.weight === 'primary';
+const categoryUrl = `/${category.slug}`;
+const featuredLabel = category.featuredLabel ?? 'New here? Read this first';
+---
+
+<article class:list={[
+  'border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white h-full',
+  isPrimary ? 'lg:p-8 p-6' : 'p-5',
+]}>
+  <div class:list={[
+    'grid gap-4 items-start h-full',
+    isPrimary ? 'md:grid-cols-[104px_1fr]' : 'sm:grid-cols-[88px_1fr]',
+  ]}>
+    <div class:list={[
+      'overflow-hidden border-4 border-solid border-lt-purple dark:border-dk-blue-light bg-lt-perfume dark:bg-dk-blue-header',
+      isPrimary ? 'w-[104px] h-[104px]' : 'w-[88px] h-[88px]',
+    ]}>
+      {featuredPost?.listingImage ? (
+        <img
+          src={featuredPost.listingImage}
+          alt=""
+          class="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class="h-full w-full bg-gradient-to-br from-lt-blue-light via-lt-perfume to-lt-blue-light dark:from-dk-purple-header dark:via-dk-blue-header dark:to-dk-purple-header" />
+      )}
+    </div>
+
+    <div class="grid gap-2">
+      <div>
+        <p class="spotlight-label uppercase tracking-[0.16em] text-sm font-semibold text-lt-gray-box dark:text-dk-gray">
+          Category
+        </p>
+        <h2 class:list={[
+          'm-0! leading-tight',
+          isPrimary ? 'text-3xl lg:text-4xl' : 'text-2xl lg:text-3xl',
+        ]}>
+          <a href={categoryUrl} class="no-underline hover:underline hover:underline-offset-4">
+            {category.name}
+          </a>
+        </h2>
+        <p class:list={[
+          'spotlight-description text-base lg:text-lg leading-relaxed',
+          isPrimary ? 'spotlight-description--primary' : 'spotlight-description--secondary',
+        ]}>{category.description}</p>
+      </div>
+
+      <div class="border-t-2 border-lt-purple dark:border-dk-blue-light mt-2 pt-3">
+        <p class="spotlight-label uppercase tracking-[0.12em] text-sm font-semibold text-lt-gray-box dark:text-dk-gray">{featuredLabel}</p>
+        {featuredPost ? (
+          <a href={`/${featuredPost.category.toLowerCase()}${featuredPost.slug}`} class="post-link no-underline">
+            <span class:list={[
+              'post-title block font-semibold leading-snug',
+              isPrimary ? 'text-xl lg:text-2xl' : 'text-lg lg:text-xl',
+            ]}>
+              {featuredPost.title}
+            </span>
+          </a>
+        ) : (
+          <p class="my-0 text-base lg:text-lg">Browse the category to find a good first read.</p>
+        )}
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .spotlight-label {
+    margin-top: 0;
+    margin-bottom: 0.2rem;
+  }
+
+  .spotlight-description {
+    margin-top: 0.65rem;
+    margin-bottom: 0;
+  }
+</style>

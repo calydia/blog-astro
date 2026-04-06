@@ -1,0 +1,44 @@
+---
+import type BlogData from '../interfaces/blogHighlight';
+
+const {
+  featuredPost,
+  categoryName,
+  label = 'New here? Read this first',
+} = Astro.props as {
+  featuredPost?: BlogData;
+  categoryName: string;
+  label?: string;
+};
+---
+
+{featuredPost && (
+  <section
+    aria-labelledby="category-first-read-heading"
+    class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mx-auto border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white p-6 lg:p-8"
+  >
+    <p class="first-read-label uppercase tracking-[0.16em] text-sm font-semibold text-lt-gray-box dark:text-dk-gray">
+      {label}
+    </p>
+    <h2 id="category-first-read-heading" class="m-0! text-2xl lg:text-3xl">
+      <a href={`/${featuredPost.category.toLowerCase()}${featuredPost.slug}`} class="post-link no-underline">
+        <span class="post-title">{featuredPost.title}</span>
+      </a>
+    </h2>
+    <p class="first-read-description text-base lg:text-lg leading-relaxed">
+      A strong place to start if you are new to my {categoryName.toLowerCase()} posts.
+    </p>
+  </section>
+)}
+
+<style>
+  .first-read-label {
+    margin-top: 0;
+    margin-bottom: 0.35rem;
+  }
+
+  .first-read-description {
+    margin-top: 0.8rem;
+    margin-bottom: 0;
+  }
+</style>

@@ -1,69 +1,55 @@
 ---
 import LayoutPost from '../../layouts/LayoutPost.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
+import TagList from '../../components/TagList.astro';
 import dayjs from 'dayjs';
 import type Page from '../../interfaces/page';
+import type BlogData from '../../interfaces/blogHighlight';
+import { fetchArticles } from '../../utils/blogApi';
+import { getCategoryDiscoveryConfig, getFeaturedCategoryPost } from '../../utils/categoryDiscovery';
+import { getReadingTime } from '../../utils/readingTime';
+import { getRelatedPosts, normalizeSecondaryCategories } from '../../utils/tags';
 
 export async function getStaticPaths() {
-  const slugResponse = await fetch("https://drupal.ampere.corrupted.pw/graphql",
-    {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        query: `
-        query GetBlogPosts {
-          articles (limit: 1000) {
-            items {
-              title
-              authorContent
-              authorImage
-              authorName
-              category
-              content
-              date
-              id
-              imageCredits
-              slug
-              published
-              mainImage
-              listingImage
-              metaDescription
-              boxTitle
-              boxContent
-            }
-          }
-        }
-        `
-      }),
-    });
+  const articleResponse = await fetchArticles({ limit: 1000, fieldSet: 'full' });
+  const allArticles = articleResponse.articles.items as Page[];
 
-  const blogListJson = await slugResponse.json();
-  const slugContent = blogListJson.data;
-
-  return slugContent.articles.items.map((page: Page) => ({
+  return allArticles.map((page: Page) => ({
     params: { slug: page.slug.substring(1), category: page.category.toLowerCase() },
-    props: page,
+    props: {
+      ...page,
+      relatedPosts: getRelatedPosts(page, allArticles),
+      featuredCategoryPost: getFeaturedCategoryPost(
+        allArticles,
+        getCategoryDiscoveryConfig(page.category.toLowerCase())?.featuredSlug ?? '',
+      ),
+    },
   }));
 }
 
-type Props = Page;
+type Props = Page & { relatedPosts: BlogData[]; featuredCategoryPost?: BlogData };
 
-const page = Astro.props;
+const page = Astro.props as Props;
+const pageTags = normalizeSecondaryCategories(page.secondaryCategories);
 ---
 <LayoutPost title={ page.title } currentUrl={ `/${page.category.toLowerCase()}/${page.slug.substring(1)}` } currentSlug={ page.slug }
   metaDescription={ page.metaDescription } mainImage={ page.mainImage } authorImage={ page.authorImage } authorName={ page.authorName } authorContent={ page.authorContent }
-  categoryURL={ page.category.toLowerCase() } categoryName={ page.category }
+  categoryURL={ page.category.toLowerCase() } categoryName={ page.category } featuredCategoryPost={page.featuredCategoryPost} relatedPosts={page.relatedPosts}
   >
   <h1 id="skip-target" class="text-3xl font-bold mt-4 mb-2 lg:text-4xl">{ page.title }</h1>
   <span class="text-base">
     {dayjs(page.date).format(`MMMM DD, YYYY`)}{' '}
-    | { page.category }
+    | { page.category }{' '}
+    | { getReadingTime(page.content) }
   </span>
+  <TagList tags={pageTags} />
   {page.boxContent ?
     <div class="box grid gap-6 border-solid border-4 p-8-px my-8 bg-lt-code-bg border-lt-code-border dark:bg-dk-code-bg dark:border-dk-code-border">
       <h2 class="m-0">{page.boxTitle}</h2>
       <div><Fragment set:html={ page.boxContent } /></div>
     </div>
   : null }
-  <div  class="text-xl bodytext"><Fragment set:html={ page.content } /></div>
+  <div class="text-xl bodytext"><Fragment set:html={ page.content } /></div>
   <div class="text-base"><Fragment set:html={ page.imageCredits } /></div>
+  <RelatedPosts posts={page.relatedPosts} />
 </LayoutPost>

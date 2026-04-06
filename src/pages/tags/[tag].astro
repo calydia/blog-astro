@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import OtherBlogListing from '../../components/OtherBlogListing.astro';
+import TopicBrowse from '../../components/TopicBrowse.astro';
+import type BlogData from '../../interfaces/blogHighlight';
+import type TagData from '../../interfaces/tag';
+import { fetchArticles } from '../../utils/blogApi';
+import { getPopularTags, normalizeSecondaryCategories } from '../../utils/tags';
+
+export async function getStaticPaths() {
+  const articleResponse = await fetchArticles({ limit: 1000, fieldSet: 'listing' });
+  const allPosts = articleResponse.articles.items as BlogData[];
+  const tagMap = new Map<string, TagData>();
+
+  allPosts.forEach((post) => {
+    normalizeSecondaryCategories(post.secondaryCategories).forEach((tag) => {
+      tagMap.set(tag.slug, tag);
+    });
+  });
+
+  return Array.from(tagMap.values()).map((tag) => ({
+    params: { tag: tag.slug },
+    props: (() => {
+      const posts = allPosts.filter((post) =>
+        normalizeSecondaryCategories(post.secondaryCategories).some((postTag) => postTag.slug === tag.slug),
+      );
+
+      return {
+        tag,
+        posts,
+        browseTags: getPopularTags(posts, { limit: 12, minCount: 1 }).filter((browseTag) => browseTag.slug !== tag.slug),
+      };
+    })(),
+  }));
+}
+
+const { tag, posts, browseTags } = Astro.props as { tag: TagData; posts: BlogData[]; browseTags: TagData[] };
+---
+
+<Layout
+  title={`Posts about ${tag.label}`}
+  metaDescription={`Browse blog posts about ${tag.label}.`}
+  currentUrl={`/tags/${tag.slug}`}
+>
+  <div class="max-w-[1564px] mx-auto md:px-8-px">
+    <div class="text-lt-gray dark:text-dk-gray py-2 px-4-px max-w-xl mx-auto md:py-6 md:px-8-px lg:max-w-4xl">
+      <h1 id="skip-target" class="block px-4-px font-bold text-center mt-8 lg:mt-16 mb-4 lg:mb-8 text-4xl md:text-5xl text-lt-gray-heading dark:text-dk-gray-heading">
+        {tag.label}
+      </h1>
+    </div>
+  </div>
+
+  <TopicBrowse tags={browseTags} />
+
+  <section class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mt-0 xl:mx-auto" slot="blogs" aria-label="Blog listing">
+    <ul class="grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-12" role="list">
+      <OtherBlogListing posts={posts} />
+    </ul>
+  </section>
+</Layout>

@@ -1,0 +1,27 @@
+---
+import type TagData from '../interfaces/tag';
+
+const {
+  tags,
+  label = 'Topics',
+  className = '',
+} = Astro.props as { tags: TagData[]; label?: string; className?: string };
+---
+
+{tags.length > 0 && (
+  <div class={`mt-4 ${className}`}>
+    <span class="font-semibold">{label}:</span>
+    <ul class="inline-flex flex-wrap gap-2 ml-2 my-0 p-0 align-middle" role="list">
+      {tags.map((tag) => (
+        <li>
+          <a
+            href={`/tags/${tag.slug}`}
+            class="inline-block border border-lt-blue-dark dark:border-dk-blue-light px-3 py-1 text-sm no-underline hover:border-lt-purple dark:hover:border-wheat"
+          >
+            {tag.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}

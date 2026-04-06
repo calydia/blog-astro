@@ -1,0 +1,31 @@
+---
+import type TagData from '../interfaces/tag';
+
+const {
+  title = 'Browse by topic',
+  tags,
+} = Astro.props as { title?: string; tags: TagData[] };
+---
+
+{tags.length > 0 && (
+  <section
+    aria-labelledby="browse-by-topic-heading"
+    class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mx-auto border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white p-5"
+  >
+    <h2 id="browse-by-topic-heading" class="m-0! mt-0! text-center text-xl lg:text-2xl">
+      {title}
+    </h2>
+    <ul class="flex flex-wrap justify-center gap-3 mt-4 mb-0 p-0" role="list">
+      {tags.map((tag) => (
+        <li>
+          <a
+            href={`/tags/${tag.slug}`}
+            class="inline-block border border-lt-blue-dark dark:border-dk-blue-light px-3 py-2 text-sm lg:text-base no-underline hover:border-lt-purple dark:hover:border-wheat"
+          >
+            {tag.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

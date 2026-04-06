@@ -1,3 +1,5 @@
+import type { SecondaryCategoriesValue } from './tag';
+
 export default interface Page {
   title: string,
   authorContent: string,
@@ -15,4 +17,5 @@ export default interface Page {
   metaDescription: string,
   boxTitle: string,
   boxContent: string,
+  secondaryCategories?: SecondaryCategoriesValue,
 }

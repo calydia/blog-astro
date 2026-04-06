@@ -4,9 +4,25 @@ import SkipLink from '../components/SkipLink.astro';
 import MainNavigation from '../components/MainNavigation.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import Footer from '../components/Footer.astro';
-import { Image } from 'astro:assets';
+import ArticleSidebar from '../components/ArticleSidebar.astro';
+import { Icon } from 'astro-icon/components';
 
-const { title, currentUrl, currentSlug, metaDescription, mainImage, authorImage, authorName, authorContent, categoryURL, categoryName } = Astro.props
+const {
+  title,
+  currentUrl,
+  currentSlug,
+  metaDescription,
+  mainImage,
+  authorImage,
+  authorName,
+  authorContent,
+  categoryURL,
+  categoryName,
+  featuredCategoryPost,
+  relatedPosts = [],
+} = Astro.props
+const siteRoot = 'https://blog.sanna.ninja';
+const normalizedUrl = (currentUrl === '/' || currentUrl === '') ? `${siteRoot}/` : `${siteRoot}${currentUrl}/`;
 
 import '@fontsource/satisfy';
 import '@fontsource/atkinson-hyperlegible';
@@ -31,18 +47,25 @@ import '../styles/global.css';
     <meta property="og:image" content={ mainImage } />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:url" content={`https://blog.sanna.ninja${currentUrl}/`} />
+    <meta property="og:url" content={normalizedUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Sanna Kramsi – Blog" href="/rss.xml" />
     <link rel="shortcut icon" href="/favicons/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicons/favicon.ico" type="image/x-icon">
     <link rel="manifest" href="/manifest.json">
-    <link rel="canonical" href={`https://blog.sanna.ninja${currentUrl}/`} />
+    <link rel="canonical" href={normalizedUrl} />
   </head>
   <body class="font-sans hyphens-auto">
     <header id="page-top" class="bg-gradient-to-r from-lt-perfume via-lt-blue-light to-lt-perfume
       dark:from-dk-purple-header dark:via-dk-blue-header dark:to-dk-purple-header">
       <SkipLink skipId="skip" skipTarget="#skip-target" skipTextVariable="Skip to main content" />
       <div class="flex flex-wrap justify-end gap-1">
+        <a href="/rss.xml"
+          class="py-2 px-3 text-black dark:text-white border-y-4 border-transparent hover:border-y-4 hover:border-lt-purple dark:hover:border-dk-blue-light focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-black dark:focus:outline-white"
+          aria-label="RSS feed"
+        >
+          <Icon name="rss" class="h-8 w-8" aria-hidden="true" />
+        </a>
         <ThemeToggle />
       </div>
       <div class="text-center clear-both lg:clear:none">
@@ -59,34 +82,21 @@ import '../styles/global.css';
     </header>
     <main class="text-lg lg:text-xl">
       <div class="grid custom-grid max-w-[1564px] mx-auto md:px-8-px">
-        <div class="grid col-span-2" slot="mainImage">
-          <Image
-            src={ mainImage }
-            alt=""
-            width={1500}
-            height={600}
-          />
-        </div>
         <Breadcrumb currentTitle={ title } currentUrl={ currentUrl } currentSlug={ currentSlug } categoryURL={ categoryURL } categoryName={ categoryName } />
         <div class="text-lt-gray dark:text-dk-gray py-2 px-4-px max-w-xl mx-auto col-span-2 md:col-span-1 md:m-0 md:py-6 md:px-8-px lg:max-w-4xl">
           <slot />
         </div>
-        <aside class="mt-36 col-span-2 md:col-span-1 md:w-[280px] md:mx-auto" slot="aside">
-          <article>
-            <div class="p-[12px] md:p-8 text-center text-lg bg-lt-blue-light text-lt-gray dark:bg-dk-purple dark:text-white">
-              <div class="mb-6 -mt-28">
-                <Image
-                  src={ authorImage }
-                  alt=""
-                  width={150}
-                  height={150}
-                  class="rounded-full mx-auto"
-                />
-              </div>
-              <span class="font-title text-2xl text-lt-gray-box dark:text-dk-gray">{ authorName }</span>
-              <div class="text-lg max-w-xl mx-auto text-lt-gray-box dark:text-dk-gray"><Fragment set:html={ authorContent } /></div>
-            </div>
-          </article>
+        <aside class="mt-8 col-span-2 md:col-span-1 md:w-[280px] md:mx-auto md:mt-20" slot="aside">
+          <ArticleSidebar
+            authorImage={authorImage}
+            authorName={authorName}
+            authorContent={authorContent}
+            categoryName={categoryName}
+            categoryUrl={categoryURL}
+            featuredCategoryPost={featuredCategoryPost}
+            relatedPosts={relatedPosts}
+            currentSlug={currentSlug}
+          />
         </aside>
       </div>
     </main>
@@ -100,7 +110,6 @@ import '../styles/global.css';
   :root {
     --quote-icon: url('/icons/iconmonstr-quote-light.svg');
     --external-icon: url('/icons/icons8-external-link-light.svg');
-    --exclamation-icon: url('/icons/hi-exclamation-circle-light.svg');
     --nav-background: rgba(255,255,255,0.2);
     --nav-border: rgba(255,255,255,0.4);
     --menu-header-background: rgba(0,0,0,0.4);
@@ -108,7 +117,6 @@ import '../styles/global.css';
   :root.dark {
     --quote-icon: url('/icons/iconmonstr-quote-dark.svg');
     --external-icon: url('/icons/icons8-external-link-dark.svg');
-    --exclamation-icon: url('/icons/hi-exclamation-circle-dark.svg');
     --nav-background: rgba(0,0,0,0.1);
     --nav-border: rgba(0,0,0,0.4);
     --menu-header-background: rgba(255,255,255,0.4);
