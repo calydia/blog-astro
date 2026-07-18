@@ -11,28 +11,20 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
-    "@astrojs/react": "^6.0.0",
-    "@astrojs/rss": "^4.0.18",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource/atkinson-hyperlegible": "^5.1.0",
-    "@fontsource/average-sans": "^5.0.8",
     "@fontsource/lato": "^5.0.18",
-    "@fontsource/rock-salt": "^5.0.18",
     "@fontsource/satisfy": "^5.1.0",
-    "@tailwindcss/vite": "^4.2.4",
-    "@types/react": "^19.2.16",
-    "@types/react-dom": "^19.0.2",
-    "astro": "^6.4.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.1",
     "astro-icon": "^1.0.2",
     "dayjs": "^1.11.21",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "tailwindcss": "^4.2.4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   },
   "overrides": {
     "defu": "^6.1.6",
-    "vite": "^7.3.2",
     "yaml": "^2.8.3"
   }
 }
