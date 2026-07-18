@@ -16,11 +16,15 @@
   </button>
 
 
-<script is:inline>
+<script>
   // Implementation based on accessible Astro components
   // variables
   let darkMode = localStorage.getItem('darkMode');
-  const darkModeToggle = document.querySelector('#theme-toggle-button');
+  const darkModeToggle = document.querySelector<HTMLButtonElement>('#theme-toggle-button');
+
+  if (!darkModeToggle) {
+    throw new Error('Theme toggle button is missing');
+  }
 
   // functions
   const enableDarkMode = (store = true) => {
@@ -50,8 +54,8 @@
   if (!darkMode) checkPreference();
 
   darkModeToggle.addEventListener('click', () => {
-    darkMode = document.documentElement.classList.contains('dark');
+    const isDarkMode = document.documentElement.classList.contains('dark');
 
-    !darkMode ? enableDarkMode() : disableDarkMode();
+    !isDarkMode ? enableDarkMode() : disableDarkMode();
   });
 </script>

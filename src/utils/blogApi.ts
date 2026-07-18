@@ -3,7 +3,7 @@ type GraphQLResponse<T> = {
   errors?: Array<{ message: string }>,
 };
 
-const BLOG_API_URL = 'https://drupal.ampere.corrupted.pw/graphql';
+const BLOG_API_URL = import.meta.env.BLOG_API_URL ?? 'https://drupal.ampere.corrupted.pw/graphql';
 
 let articleFieldsPromise: Promise<Set<string>> | undefined;
 

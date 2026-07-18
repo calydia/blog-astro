@@ -19,3 +19,7 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Playwright output (visual baselines are committed under tests/__screenshots__)
+playwright-report/
+test-results/
