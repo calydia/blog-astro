@@ -6,36 +6,22 @@ import type BlogData from '../interfaces/blogHighlight';
 const { posts } = Astro.props as { posts: BlogData[] };
 ---
 
-{posts.map((node: BlogData, index: number) => {
-  return (
-  <li class="grid items-stretch p-2 border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray
-    dark:gradient-border-dark dark:bg-dk-purple dark:text-white
-    ">
-      <a class="post-link border-2 border-transparent focus:outline focus:outline-4 focus:outline-offset-15	focus:outline-black dark:focus:outline-white hover:border-lt-purple dark:hover:border-dk-blue-light" href={`/${node.category.toLowerCase()}${node.slug}`}>
-        <Image
-          src={node.listingImage}
-          alt=""
-          width={690}
-          height={404}
-        />
-        <div class="self-center text-center font-light">
-          <span id={`first-blog-title${index}`} class="post-title block text-lg font-semibold md:text-2xl py-4 px-2 text-balance hyphens-manual
-          after:bg-black after:h-0.5 after:block after:w-10 after:mt-4 after:mb-0 after:mx-auto after:content-['']
-          dark:after:bg-white
-          ">
-            {node.title}
-          </span>
-          <span class="sr-only">on</span>
-          <span class="block text-sm md:text-base pb-3 text-lt-gray-box dark:text-dk-gray">
-          {dayjs(node.date)
-              .format(`MMMM DD, YYYY`)}{' '}
-            <span aria-hidden="true">|</span>{' '}<span class="sr-only">in category</span> {node.category}
-          </span>
-          <span class="block text-sm lg:text-[0.95rem] leading-relaxed px-4 pb-4">
-            {node.metaDescription}
-          </span>
-        </div>
-      </a>
-    </li>
-  );
-})}
+{posts.map((node: BlogData, index: number) => (
+  <li class="card-cover group relative grid content-start items-stretch p-2 border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray transition-shadow hover:shadow-lg focus-within:shadow-lg dark:gradient-border-dark dark:bg-dk-purple dark:text-white">
+    <Image src={node.listingImage} alt="" width={690} height={404} class="block self-start w-full aspect-[690/404] object-cover" />
+    <div class="self-start text-center font-light">
+      <h2 id={`first-blog-title${index}`} class="m-0 text-[18px] leading-7 font-semibold md:text-[24px] md:leading-8 py-4 px-2 text-balance hyphens-manual text-lt-gray dark:text-white after:bg-black after:h-0.5 after:block after:w-10 after:mt-4 after:mb-0 after:mx-auto after:content-[''] dark:after:bg-white">
+        <a class="card-cover__link post-link no-underline" href={`/${node.category.toLowerCase()}${node.slug}`}>
+          <span class="post-title">{node.title}</span>
+        </a>
+      </h2>
+      <p class="my-0 text-sm md:text-base leading-5 md:leading-6 pb-3 text-lt-gray-box dark:text-dk-gray">
+        {dayjs(node.date).format('MMMM DD, YYYY')}{' '}
+        <span aria-hidden="true">|</span>{' '}<span class="sr-only">in category</span> {node.category}
+      </p>
+      <p class="my-0 text-sm lg:text-[0.95rem] leading-relaxed px-4 pb-4">
+        {node.metaDescription}
+      </p>
+    </div>
+  </li>
+))}

@@ -260,8 +260,26 @@ import '../styles/global.css';
     @apply hidden invisible;
   }
 
-  p {
-    @apply my-8 leading-relaxed font-light;
+  @layer base {
+    p {
+      @apply my-8 leading-relaxed font-light;
+    }
+
+    h1, h2, h3, h4 {
+      @apply text-lt-gray-heading dark:text-dk-gray-heading;
+    }
+
+    h2 {
+      @apply text-2xl lg:text-3xl font-bold mt-8;
+    }
+
+    h3 {
+      @apply text-xl lg:text-2xl font-bold mt-8;
+    }
+
+    h4 {
+      @apply text-lg lg:text-xl font-bold mt-8;
+    }
   }
 
   .post-link {
@@ -270,22 +288,6 @@ import '../styles/global.css';
 
   .post-link:hover .post-title {
     @apply text-lt-purple dark:text-dk-blue-light underline decoration-2 underline-offset-4;
-  }
-
-  h1, h2, h3, h4 {
-    @apply text-lt-gray-heading dark:text-dk-gray-heading;
-  }
-
-  h2 {
-    @apply text-2xl lg:text-3xl font-bold mt-8;
-  }
-
-  h3 {
-    @apply text-xl lg:text-2xl font-bold mt-8;
-  }
-
-  h4 {
-    @apply text-lg lg:text-xl font-bold mt-8;
   }
 
   .custom-grid {

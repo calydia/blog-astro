@@ -10,17 +10,17 @@ const {
 {tags.length > 0 && (
   <section
     aria-labelledby="browse-by-topic-heading"
-    class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mx-auto border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white p-5"
+    class="max-w-7xl mx-4-px mb-6 md:mb-8 xl:mx-auto border-y-2 border-solid border-lt-blue-middle dark:border-dk-blue-header text-lt-gray dark:text-white py-4 px-2"
   >
     <h2 id="browse-by-topic-heading" class="m-0! mt-0! text-center text-xl lg:text-2xl">
       {title}
     </h2>
-    <ul class="flex flex-wrap justify-center gap-3 mt-4 mb-0 p-0" role="list">
+    <ul class="flex flex-wrap justify-center gap-2 mt-3 mb-0 p-0" role="list">
       {tags.map((tag) => (
         <li>
           <a
             href={`/tags/${tag.slug}`}
-            class="inline-block border border-lt-blue-dark dark:border-dk-blue-light px-3 py-2 text-sm lg:text-base no-underline hover:border-lt-purple dark:hover:border-wheat"
+            class="inline-block border border-lt-blue-dark dark:border-dk-blue-light px-3 py-1.5 text-sm lg:text-base no-underline hover:bg-lt-blue-middle dark:hover:bg-dk-purple focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-lt-purple dark:focus:outline-dk-blue-light"
           >
             {tag.label}
           </a>

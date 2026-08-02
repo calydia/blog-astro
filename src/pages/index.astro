@@ -5,7 +5,7 @@ import OtherBlogListing from '../components/OtherBlogListing.astro';
 import CategorySpotlightCard from '../components/CategorySpotlightCard.astro';
 import type BlogData from '../interfaces/blogHighlight';
 import { fetchArticles, fetchPageContent } from '../utils/blogApi';
-import { categoryDiscoveryConfig, getFeaturedCategoryPost } from '../utils/categoryDiscovery';
+import { categoryDiscoveryConfig, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
 
 const frontContent = await fetchPageContent(1);
 const allPostsResponse = await fetchArticles({ limit: 101, fieldSet: 'listing' });
@@ -26,42 +26,42 @@ const secondaryCategories = categoryDiscoveryConfig.filter((category) => categor
     </div>
   </div>
 
-  <section aria-labelledby="start-exploring-heading" class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mx-auto">
-    <div class="text-center max-w-4xl mx-auto mb-6">
-      <h2 id="start-exploring-heading" class="text-3xl lg:text-4xl font-bold mt-0 mb-2">Start exploring</h2>
+  <section aria-labelledby="start-exploring-heading" class="max-w-7xl mx-4-px mb-8 md:mb-10 xl:mx-auto">
+    <div class="text-center max-w-4xl mx-auto mb-5">
+      <h2 id="start-exploring-heading" class="text-3xl lg:text-4xl font-bold mt-0 mb-2">Explore by topic</h2>
       <p class="my-0 text-base md:text-lg lg:text-xl text-lt-gray dark:text-dk-gray">
         If you are new here, start with the topics that best match what you want to read.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
       {primaryCategories.map((category) => (
         <CategorySpotlightCard
           category={category}
-          featuredPost={getFeaturedCategoryPost(allPosts, category.featuredSlug)}
+          featuredPost={resolveFeaturedCategoryPost(allPosts, category)}
         />
       ))}
     </div>
 
-    <div class="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2 xl:grid-cols-3 lg:gap-8">
+    <div class="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2 xl:grid-cols-3 lg:gap-6">
       {secondaryCategories.map((category) => (
         <CategorySpotlightCard
           category={category}
-          featuredPost={getFeaturedCategoryPost(allPosts, category.featuredSlug)}
+          featuredPost={resolveFeaturedCategoryPost(allPosts, category)}
         />
       ))}
     </div>
   </section>
 
 	<section class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mt-0 xl:mx-auto" slot="blogs" aria-label="Blog listing">
-      <div class="text-center max-w-4xl mx-auto mb-8">
+      <div class="text-center max-w-4xl mx-auto mb-6">
         <h2 class="text-3xl lg:text-4xl font-bold mt-0 mb-3">Latest posts</h2>
         <p class="my-0 text-lg lg:text-xl text-lt-gray dark:text-dk-gray">
           Or jump into the newest writing across every category.
         </p>
       </div>
 		{/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
-		<ul class="grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-12" role="list">
+		<ul class="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8" role="list">
 			<NewestBlogListing posts={newestPosts} />
 			<OtherBlogListing posts={otherPosts} />
 		</ul>

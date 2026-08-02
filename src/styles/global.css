@@ -50,3 +50,25 @@
   /* Outline offset */
   --outline-offset-15: 15px;
 }
+
+@layer components {
+  .card-cover__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+
+  .card-cover:focus-within {
+    outline: 4px solid #111;
+    outline-offset: 4px;
+  }
+
+  .dark .card-cover:focus-within {
+    outline-color: #fff;
+  }
+
+  .card-cover__link:focus {
+    outline: none;
+  }
+}

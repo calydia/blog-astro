@@ -54,6 +54,48 @@ export function getCategoryDiscoveryConfig(slug: string): CategoryDiscoveryConfi
   return categoryDiscoveryConfig.find((category) => category.slug === slug);
 }
 
-export function getFeaturedCategoryPost(posts: BlogData[], featuredSlug: string): BlogData | undefined {
-  return posts.find((post) => post.slug === featuredSlug);
+function comparePostsNewestFirst(firstPost: BlogData, secondPost: BlogData): number {
+  const firstTime = Date.parse(firstPost.date);
+  const secondTime = Date.parse(secondPost.date);
+  const firstHasValidDate = Number.isFinite(firstTime);
+  const secondHasValidDate = Number.isFinite(secondTime);
+
+  if (firstHasValidDate && secondHasValidDate && firstTime !== secondTime) {
+    return secondTime - firstTime;
+  }
+
+  if (firstHasValidDate !== secondHasValidDate) {
+    return firstHasValidDate ? -1 : 1;
+  }
+
+  return firstPost.slug.localeCompare(secondPost.slug);
+}
+
+export function resolveFeaturedCategoryPost(
+  posts: BlogData[],
+  category: CategoryDiscoveryConfig,
+  drupalSelectedPosts: BlogData[] = [],
+): BlogData | undefined {
+  const selectedPosts = [...drupalSelectedPosts].sort(comparePostsNewestFirst);
+
+  if (selectedPosts.length > 1) {
+    const [chosenPost, ...otherPosts] = selectedPosts;
+    console.warn(
+      `[category discovery] Multiple featured posts selected for “${category.name}”. `
+      + `Using newest: “${chosenPost.title}”. Also selected: ${otherPosts.map((post) => `“${post.title}”`).join(', ')}.`,
+    );
+  }
+
+  if (selectedPosts[0]) {
+    return selectedPosts[0];
+  }
+
+  const configuredPost = posts.find((post) => post.slug === category.featuredSlug);
+  if (configuredPost) {
+    return configuredPost;
+  }
+
+  return [...posts]
+    .filter((post) => post.category.toLowerCase() === category.slug)
+    .sort(comparePostsNewestFirst)[0];
 }

@@ -8,7 +8,7 @@ import type Page from '../../interfaces/page';
 import type BlogData from '../../interfaces/blogHighlight';
 import { fetchArticles } from '../../utils/blogApi';
 import { buildArticleToc } from '../../utils/articleToc';
-import { getCategoryDiscoveryConfig, getFeaturedCategoryPost } from '../../utils/categoryDiscovery';
+import { getCategoryDiscoveryConfig, resolveFeaturedCategoryPost } from '../../utils/categoryDiscovery';
 import { getReadingTime } from '../../utils/readingTime';
 import { getRelatedPosts, normalizeSecondaryCategories } from '../../utils/tags';
 
@@ -16,17 +16,20 @@ export async function getStaticPaths() {
   const articleResponse = await fetchArticles({ limit: 1000, fieldSet: 'full' });
   const allArticles = articleResponse.articles.items as Page[];
 
-  return allArticles.map((page: Page) => ({
-    params: { slug: page.slug.substring(1), category: page.category.toLowerCase() },
-    props: {
-      ...page,
-      relatedPosts: getRelatedPosts(page, allArticles),
-      featuredCategoryPost: getFeaturedCategoryPost(
-        allArticles,
-        getCategoryDiscoveryConfig(page.category.toLowerCase())?.featuredSlug ?? '',
-      ),
-    },
-  }));
+  return allArticles.map((page: Page) => {
+    const categoryConfig = getCategoryDiscoveryConfig(page.category.toLowerCase());
+
+    return {
+      params: { slug: page.slug.substring(1), category: page.category.toLowerCase() },
+      props: {
+        ...page,
+        relatedPosts: getRelatedPosts(page, allArticles),
+        featuredCategoryPost: categoryConfig
+          ? resolveFeaturedCategoryPost(allArticles, categoryConfig)
+          : undefined,
+      },
+    };
+  });
 }
 
 type Props = Page & { relatedPosts: BlogData[]; featuredCategoryPost?: BlogData };
