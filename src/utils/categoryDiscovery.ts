@@ -54,6 +54,15 @@ export function getCategoryDiscoveryConfig(slug: string): CategoryDiscoveryConfi
   return categoryDiscoveryConfig.find((category) => category.slug === slug);
 }
 
+export function getDrupalFeaturedCategoryPosts(
+  posts: BlogData[],
+  category: CategoryDiscoveryConfig,
+): BlogData[] {
+  return posts.filter((post) =>
+    post.featuredCategoryPost === true && post.category.toLowerCase() === category.slug
+  );
+}
+
 function comparePostsNewestFirst(firstPost: BlogData, secondPost: BlogData): number {
   const firstTime = Date.parse(firstPost.date);
   const secondTime = Date.parse(secondPost.date);

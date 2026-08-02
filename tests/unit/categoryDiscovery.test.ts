@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it, mock } from 'node:test';
 import type BlogData from '../../src/interfaces/blogHighlight.ts';
 import {
+  getDrupalFeaturedCategoryPosts,
   getCategoryDiscoveryConfig,
   resolveFeaturedCategoryPost,
 } from '../../src/utils/categoryDiscovery.ts';
@@ -65,5 +66,22 @@ describe('resolveFeaturedCategoryPost', () => {
 
   it('returns undefined when there is no usable post', () => {
     assert.equal(resolveFeaturedCategoryPost([], category), undefined);
+  });
+});
+
+describe('getDrupalFeaturedCategoryPosts', () => {
+  it('returns only selected posts in the requested primary category', () => {
+    const selected = post({ slug: '/selected', featuredCategoryPost: true });
+    const unselected = post({ slug: '/unselected', featuredCategoryPost: false });
+    const selectedElsewhere = post({
+      category: 'Tech',
+      slug: '/selected-tech',
+      featuredCategoryPost: true,
+    });
+
+    assert.deepEqual(
+      getDrupalFeaturedCategoryPosts([selected, unselected, selectedElsewhere], category),
+      [selected],
+    );
   });
 });

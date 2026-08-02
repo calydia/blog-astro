@@ -7,5 +7,6 @@ export default interface BlogData {
   date: string,
   listingImage: string,
   metaDescription: string,
+  featuredCategoryPost?: boolean,
   secondaryCategories?: SecondaryCategoriesValue,
 }

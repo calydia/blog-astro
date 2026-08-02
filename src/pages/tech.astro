@@ -6,7 +6,7 @@ import CategoryFirstRead from '../components/CategoryFirstRead.astro';
 import TopicBrowse from '../components/TopicBrowse.astro';
 import type BlogData from '../interfaces/blogHighlight';
 import { fetchArticles, fetchPageContent } from '../utils/blogApi';
-import { getCategoryDiscoveryConfig, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
+import { getCategoryDiscoveryConfig, getDrupalFeaturedCategoryPosts, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
 import { getPopularTags } from '../utils/tags';
 
 const frontContent = await fetchPageContent(5);
@@ -16,7 +16,9 @@ const newestPosts = allPosts.slice(0, 1);
 const otherPosts = allPosts.slice(1);
 const popularTags = getPopularTags(allPosts);
 const categoryConfig = getCategoryDiscoveryConfig('tech');
-const featuredPost = categoryConfig ? resolveFeaturedCategoryPost(allPosts, categoryConfig) : undefined;
+const featuredPost = categoryConfig
+  ? resolveFeaturedCategoryPost(allPosts, categoryConfig, getDrupalFeaturedCategoryPosts(allPosts, categoryConfig))
+  : undefined;
 ---
 
 <Layout title={ frontContent.page.title } metaDescription={ frontContent.page.metaDescription }

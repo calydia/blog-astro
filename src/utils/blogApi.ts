@@ -5,7 +5,12 @@ type GraphQLResponse<T> = {
 
 const BLOG_API_URL = import.meta.env.BLOG_API_URL ?? 'https://drupal.ampere.corrupted.pw/graphql';
 
-let articleFieldsPromise: Promise<Set<string>> | undefined;
+type ArticleCapabilities = {
+  fields: Set<string>;
+  arguments: Set<string>;
+};
+
+let articleCapabilitiesPromise: Promise<ArticleCapabilities> | undefined;
 
 async function fetchGraphQL<T>(query: string): Promise<T> {
   const response = await fetch(BLOG_API_URL, {
@@ -23,23 +28,44 @@ async function fetchGraphQL<T>(query: string): Promise<T> {
   return json.data;
 }
 
-async function getArticleFields(): Promise<Set<string>> {
-  articleFieldsPromise ??= fetchGraphQL<{ __type: { fields: Array<{ name: string }> } }>(`
-    query ArticleFields {
-      __type(name: "Article") {
+async function getArticleCapabilities(): Promise<ArticleCapabilities> {
+  articleCapabilitiesPromise ??= fetchGraphQL<{
+    articleType: { fields: Array<{ name: string }> };
+    queryType: { fields: Array<{ name: string; args: Array<{ name: string }> }> };
+  }>(`
+    query ArticleCapabilities {
+      articleType: __type(name: "Article") {
         fields {
           name
         }
       }
+      queryType: __type(name: "Query") {
+        fields {
+          name
+          args {
+            name
+          }
+        }
+      }
     }
-  `).then((data) => new Set(data.__type.fields.map((field) => field.name)));
+  `).then((data) => ({
+    fields: new Set(data.articleType.fields.map((field) => field.name)),
+    arguments: new Set(
+      data.queryType.fields.find((field) => field.name === 'articles')?.args.map((argument) => argument.name) ?? [],
+    ),
+  }));
 
-  return articleFieldsPromise;
+  return articleCapabilitiesPromise;
 }
 
 async function getSecondaryCategoryFieldSelection(): Promise<string> {
-  const articleFields = await getArticleFields();
-  return articleFields.has('secondaryCategories') ? '\n          secondaryCategories' : '';
+  const capabilities = await getArticleCapabilities();
+  return capabilities.fields.has('secondaryCategories') ? '\n          secondaryCategories' : '';
+}
+
+async function getFeaturedCategoryPostFieldSelection(): Promise<string> {
+  const capabilities = await getArticleCapabilities();
+  return capabilities.fields.has('featuredCategoryPost') ? '\n          featuredCategoryPost' : '';
 }
 
 export async function fetchPageContent(pageId: number) {
@@ -58,14 +84,24 @@ export async function fetchArticles({
   limit,
   offset = 0,
   category,
+  featuredOnly = false,
   fieldSet,
 }: {
   limit: number;
   offset?: number;
   category?: number;
+  featuredOnly?: boolean;
   fieldSet: 'listing' | 'full' | 'rss';
 }) {
-  const secondaryCategoryField = await getSecondaryCategoryFieldSelection();
+  const capabilities = await getArticleCapabilities();
+  if (featuredOnly && !capabilities.arguments.has('featuredOnly')) {
+    return { articles: { items: [] } };
+  }
+
+  const [secondaryCategoryField, featuredCategoryPostField] = await Promise.all([
+    getSecondaryCategoryFieldSelection(),
+    getFeaturedCategoryPostFieldSelection(),
+  ]);
 
   const fieldsBySet = {
     listing: `
@@ -74,7 +110,7 @@ export async function fetchArticles({
           date
           listingImage
           metaDescription
-          category${secondaryCategoryField}
+          category${secondaryCategoryField}${featuredCategoryPostField}
     `,
     full: `
           title
@@ -92,7 +128,7 @@ export async function fetchArticles({
           listingImage
           metaDescription
           boxTitle
-          boxContent${secondaryCategoryField}
+          boxContent${secondaryCategoryField}${featuredCategoryPostField}
     `,
     rss: `
           title
@@ -100,16 +136,17 @@ export async function fetchArticles({
           date
           category
           metaDescription
-          content${secondaryCategoryField}
+          content${secondaryCategoryField}${featuredCategoryPostField}
     `,
   } as const;
 
   const categoryArgument = category ? `, category: ${category}` : '';
   const offsetArgument = offset ? `, offset: ${offset}` : '';
+  const featuredOnlyArgument = featuredOnly ? ', featuredOnly: true' : '';
 
   return fetchGraphQL<{ articles: { items: unknown[] } }>(`
     query GetArticles {
-      articles(limit: ${limit}${categoryArgument}${offsetArgument}) {
+      articles(limit: ${limit}${categoryArgument}${offsetArgument}${featuredOnlyArgument}) {
         items {
 ${fieldsBySet[fieldSet]}
         }

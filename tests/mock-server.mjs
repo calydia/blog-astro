@@ -28,6 +28,7 @@ const baseArticle = {
   mainImage: imageUrl,
   metaDescription: 'A practical introduction to testing digital accessibility.',
   published: '1',
+  featuredCategoryPost: false,
   secondaryCategories: ['Accessibility', 'Accessibility Testing'],
 };
 
@@ -46,6 +47,7 @@ const articles = [
     slug: '/how-to-create-more-accessible-content-avoid-common-accessibility-mistakes',
     category: 'Accessibility',
     date: '2026-05-10T09:00:00.000Z',
+    featuredCategoryPost: true,
   },
   {
     ...baseArticle,
@@ -64,6 +66,7 @@ const articles = [
     category: 'Tech',
     date: '2026-03-12T09:00:00.000Z',
     secondaryCategories: ['Astro', 'Frontend'],
+    featuredCategoryPost: true,
   },
   {
     ...baseArticle,
@@ -73,6 +76,7 @@ const articles = [
     category: 'Life',
     date: '2026-02-10T09:00:00.000Z',
     secondaryCategories: ['Wellbeing'],
+    featuredCategoryPost: true,
   },
   {
     ...baseArticle,
@@ -82,6 +86,7 @@ const articles = [
     category: 'Cats',
     date: '2026-01-15T09:00:00.000Z',
     secondaryCategories: ['Cats'],
+    featuredCategoryPost: true,
   },
   {
     ...baseArticle,
@@ -91,6 +96,7 @@ const articles = [
     category: 'Games',
     date: '2025-12-20T09:00:00.000Z',
     secondaryCategories: ['Games'],
+    featuredCategoryPost: true,
   },
 ];
 
@@ -108,15 +114,21 @@ function json(response, status, body) {
 }
 
 function graphqlResponse(query) {
-  if (query.includes('__type(name: "Article")')) {
+  if (query.includes('query ArticleCapabilities')) {
     return {
       data: {
-        __type: {
+        articleType: {
           fields: [
             'authorContent', 'authorImage', 'authorName', 'boxContent', 'boxTitle', 'category',
             'content', 'date', 'id', 'imageCredits', 'listingImage', 'mainImage', 'metaDescription',
-            'published', 'secondaryCategories', 'slug', 'title',
+            'featuredCategoryPost', 'published', 'secondaryCategories', 'slug', 'title',
           ].map((name) => ({ name })),
+        },
+        queryType: {
+          fields: [{
+            name: 'articles',
+            args: ['offset', 'limit', 'category', 'featuredOnly'].map((name) => ({ name })),
+          }],
         },
       },
     };
@@ -133,7 +145,10 @@ function graphqlResponse(query) {
   if (query.includes('articles(')) {
     const categoryMatch = query.match(/category:\s*(\d+)/);
     const category = categoryMatch ? categoryIds[Number(categoryMatch[1])] : undefined;
-    const items = category ? articles.filter((article) => article.category === category) : articles;
+    const categoryItems = category ? articles.filter((article) => article.category === category) : articles;
+    const items = query.includes('featuredOnly: true')
+      ? categoryItems.filter((article) => article.featuredCategoryPost)
+      : categoryItems;
     return { data: { articles: { items } } };
   }
 

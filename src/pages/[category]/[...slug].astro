@@ -8,7 +8,7 @@ import type Page from '../../interfaces/page';
 import type BlogData from '../../interfaces/blogHighlight';
 import { fetchArticles } from '../../utils/blogApi';
 import { buildArticleToc } from '../../utils/articleToc';
-import { getCategoryDiscoveryConfig, resolveFeaturedCategoryPost } from '../../utils/categoryDiscovery';
+import { getCategoryDiscoveryConfig, getDrupalFeaturedCategoryPosts, resolveFeaturedCategoryPost } from '../../utils/categoryDiscovery';
 import { getReadingTime } from '../../utils/readingTime';
 import { getRelatedPosts, normalizeSecondaryCategories } from '../../utils/tags';
 
@@ -25,7 +25,11 @@ export async function getStaticPaths() {
         ...page,
         relatedPosts: getRelatedPosts(page, allArticles),
         featuredCategoryPost: categoryConfig
-          ? resolveFeaturedCategoryPost(allArticles, categoryConfig)
+          ? resolveFeaturedCategoryPost(
+              allArticles,
+              categoryConfig,
+              getDrupalFeaturedCategoryPosts(allArticles, categoryConfig),
+            )
           : undefined,
       },
     };

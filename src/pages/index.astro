@@ -5,7 +5,7 @@ import OtherBlogListing from '../components/OtherBlogListing.astro';
 import CategorySpotlightCard from '../components/CategorySpotlightCard.astro';
 import type BlogData from '../interfaces/blogHighlight';
 import { fetchArticles, fetchPageContent } from '../utils/blogApi';
-import { categoryDiscoveryConfig, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
+import { categoryDiscoveryConfig, getDrupalFeaturedCategoryPosts, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
 
 const frontContent = await fetchPageContent(1);
 const allPostsResponse = await fetchArticles({ limit: 101, fieldSet: 'listing' });
@@ -38,7 +38,7 @@ const secondaryCategories = categoryDiscoveryConfig.filter((category) => categor
       {primaryCategories.map((category) => (
         <CategorySpotlightCard
           category={category}
-          featuredPost={resolveFeaturedCategoryPost(allPosts, category)}
+          featuredPost={resolveFeaturedCategoryPost(allPosts, category, getDrupalFeaturedCategoryPosts(allPosts, category))}
         />
       ))}
     </div>
@@ -47,7 +47,7 @@ const secondaryCategories = categoryDiscoveryConfig.filter((category) => categor
       {secondaryCategories.map((category) => (
         <CategorySpotlightCard
           category={category}
-          featuredPost={resolveFeaturedCategoryPost(allPosts, category)}
+          featuredPost={resolveFeaturedCategoryPost(allPosts, category, getDrupalFeaturedCategoryPosts(allPosts, category))}
         />
       ))}
     </div>

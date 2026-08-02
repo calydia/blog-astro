@@ -5,7 +5,7 @@ import OtherBlogListing from '../components/OtherBlogListing.astro';
 import CategoryFirstRead from '../components/CategoryFirstRead.astro';
 import type BlogData from '../interfaces/blogHighlight';
 import { fetchArticles, fetchPageContent } from '../utils/blogApi';
-import { getCategoryDiscoveryConfig, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
+import { getCategoryDiscoveryConfig, getDrupalFeaturedCategoryPosts, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
 
 const frontContent = await fetchPageContent(4);
 const allPostsResponse = await fetchArticles({ limit: 101, category: 23, fieldSet: 'listing' });
@@ -13,7 +13,9 @@ const allPosts = allPostsResponse.articles.items as BlogData[];
 const newestPosts = allPosts.slice(0, 1);
 const otherPosts = allPosts.slice(1);
 const categoryConfig = getCategoryDiscoveryConfig('games');
-const featuredPost = categoryConfig ? resolveFeaturedCategoryPost(allPosts, categoryConfig) : undefined;
+const featuredPost = categoryConfig
+  ? resolveFeaturedCategoryPost(allPosts, categoryConfig, getDrupalFeaturedCategoryPosts(allPosts, categoryConfig))
+  : undefined;
 ---
 
 <Layout title={ frontContent.page.title } metaDescription={ frontContent.page.metaDescription }
