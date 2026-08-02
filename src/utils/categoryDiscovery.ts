@@ -6,30 +6,41 @@ export type CategoryWeight = 'primary' | 'secondary';
 export type CategoryDiscoveryConfig = {
   slug: CategorySlug;
   name: string;
+  pageId: number;
+  drupalCategoryId: number;
   description: string;
   weight: CategoryWeight;
   featuredSlug: string;
   featuredLabel?: string;
+  showPopularTopics?: boolean;
 };
 
 export const categoryDiscoveryConfig: CategoryDiscoveryConfig[] = [
   {
     slug: 'accessibility',
     name: 'Accessibility',
+    pageId: 6,
+    drupalCategoryId: 21,
     description: 'Practical writing on digital accessibility, content quality, and the mistakes worth avoiding.',
     weight: 'primary',
     featuredSlug: '/how-to-create-more-accessible-content-avoid-common-accessibility-mistakes',
+    showPopularTopics: true,
   },
   {
     slug: 'tech',
     name: 'Tech',
+    pageId: 5,
+    drupalCategoryId: 25,
     description: 'Frontend, Astro, Drupal, and personal project notes from building and rebuilding things.',
     weight: 'primary',
     featuredSlug: '/moving-my-accessibility-site-to-astro',
+    showPopularTopics: true,
   },
   {
     slug: 'life',
     name: 'Life',
+    pageId: 3,
+    drupalCategoryId: 24,
     description: 'Work, recovery, communication, and the personal side of building a sustainable life.',
     weight: 'secondary',
     featuredSlug: '/getting-psychological-safety-back',
@@ -37,6 +48,8 @@ export const categoryDiscoveryConfig: CategoryDiscoveryConfig[] = [
   {
     slug: 'cats',
     name: 'Cats',
+    pageId: 2,
+    drupalCategoryId: 22,
     description: 'Stories about the cats in my life, from affectionate chaos to the harder moments that stay with you.',
     weight: 'secondary',
     featuredSlug: '/remembering-osiris',
@@ -44,6 +57,8 @@ export const categoryDiscoveryConfig: CategoryDiscoveryConfig[] = [
   {
     slug: 'games',
     name: 'Games',
+    pageId: 4,
+    drupalCategoryId: 23,
     description: 'Game impressions with a personal angle, usually focused on what made the experience memorable.',
     weight: 'secondary',
     featuredSlug: '/little-kitty-big-city-a-cat-lovers-dream',

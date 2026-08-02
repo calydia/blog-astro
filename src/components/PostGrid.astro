@@ -1,0 +1,13 @@
+---
+import NewestBlogListing from './NewestBlogListing.astro';
+import OtherBlogListing from './OtherBlogListing.astro';
+import type BlogData from '../interfaces/blogHighlight';
+
+const { posts } = Astro.props as { posts: BlogData[] };
+---
+
+{/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
+<ul class="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8" role="list">
+  <NewestBlogListing posts={posts.slice(0, 1)} />
+  <OtherBlogListing posts={posts.slice(1)} />
+</ul>

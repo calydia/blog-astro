@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import NewestBlogListing from '../components/NewestBlogListing.astro';
-import OtherBlogListing from '../components/OtherBlogListing.astro';
+import PostGrid from '../components/PostGrid.astro';
 import CategorySpotlightCard from '../components/CategorySpotlightCard.astro';
 import type BlogData from '../interfaces/blogHighlight';
 import { fetchArticles, fetchPageContent } from '../utils/blogApi';
@@ -10,8 +9,7 @@ import { categoryDiscoveryConfig, getDrupalFeaturedCategoryPosts, resolveFeature
 const frontContent = await fetchPageContent(1);
 const allPostsResponse = await fetchArticles({ limit: 101, fieldSet: 'listing' });
 const allPosts = allPostsResponse.articles.items as BlogData[];
-const newestPosts = allPosts.slice(0, 1);
-const otherPosts = allPosts.slice(1);
+const latestPosts = allPosts.slice(0, 6);
 const primaryCategories = categoryDiscoveryConfig.filter((category) => category.weight === 'primary');
 const secondaryCategories = categoryDiscoveryConfig.filter((category) => category.weight === 'secondary');
 ---
@@ -60,10 +58,11 @@ const secondaryCategories = categoryDiscoveryConfig.filter((category) => categor
           Or jump into the newest writing across every category.
         </p>
       </div>
-		{/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
-		<ul class="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8" role="list">
-			<NewestBlogListing posts={newestPosts} />
-			<OtherBlogListing posts={otherPosts} />
-		</ul>
+		<PostGrid posts={latestPosts} />
+    <div class="mt-8 text-center">
+      <a href="/posts/" class="inline-flex min-h-11 items-center gap-1 rounded-sm border-2 border-lt-blue-dark px-5 py-2 font-semibold text-lt-blue-dark no-underline hover:bg-lt-blue-light focus-visible:outline-offset-4 dark:border-dk-blue-light dark:text-dk-blue-light dark:hover:bg-dk-purple">
+        Browse all posts <span aria-hidden="true">→</span>
+      </a>
+    </div>
 	</section>
 </Layout>

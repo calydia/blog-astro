@@ -1,0 +1,44 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  getPageUrl: (page: number) => string;
+}
+
+const { currentPage, totalPages, getPageUrl } = Astro.props;
+const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+---
+
+{totalPages > 1 && (
+  <nav class="mt-8 md:mt-10" aria-label="Pagination">
+    <ul class="flex flex-wrap items-center justify-center gap-2" role="list">
+      {currentPage > 1 && (
+        <li>
+          <a class="inline-flex min-h-11 items-center gap-1 rounded-sm border-2 border-lt-blue-dark px-4 py-2 font-semibold text-lt-blue-dark no-underline hover:bg-lt-blue-light focus-visible:outline-offset-4 dark:border-dk-blue-light dark:text-dk-blue-light dark:hover:bg-dk-purple" href={getPageUrl(currentPage - 1)} rel="prev">
+            <span aria-hidden="true">← </span>Previous
+          </a>
+        </li>
+      )}
+      {pageNumbers.map((pageNumber) => (
+        <li>
+          {pageNumber === currentPage ? (
+            <span class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm bg-lt-blue-dark px-3 py-2 font-bold text-white dark:bg-dk-blue-light dark:text-dk-purple" aria-current="page">
+              <span class="sr-only">Page </span>{pageNumber}
+            </span>
+          ) : (
+            <a class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-sm border-2 border-lt-blue-dark px-3 py-2 font-semibold text-lt-blue-dark no-underline hover:bg-lt-blue-light focus-visible:outline-offset-4 dark:border-dk-blue-light dark:text-dk-blue-light dark:hover:bg-dk-purple" href={getPageUrl(pageNumber)} aria-label={`Page ${pageNumber}`}>
+              {pageNumber}
+            </a>
+          )}
+        </li>
+      ))}
+      {currentPage < totalPages && (
+        <li>
+          <a class="inline-flex min-h-11 items-center gap-1 rounded-sm border-2 border-lt-blue-dark px-4 py-2 font-semibold text-lt-blue-dark no-underline hover:bg-lt-blue-light focus-visible:outline-offset-4 dark:border-dk-blue-light dark:text-dk-blue-light dark:hover:bg-dk-purple" href={getPageUrl(currentPage + 1)} rel="next">
+            Next<span aria-hidden="true"> →</span>
+          </a>
+        </li>
+      )}
+    </ul>
+  </nav>
+)}

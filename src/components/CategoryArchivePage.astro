@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CategoryFirstRead from './CategoryFirstRead.astro';
+import Pagination from './Pagination.astro';
+import PostGrid from './PostGrid.astro';
+import TopicBrowse from './TopicBrowse.astro';
+import type BlogData from '../interfaces/blogHighlight';
+import type { CategoryDiscoveryConfig } from '../utils/categoryDiscovery';
+import { getDrupalFeaturedCategoryPosts, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
+import { getPageCount, getPageItems } from '../utils/pagination';
+import { getPopularTags } from '../utils/tags';
+
+interface Props {
+  category: CategoryDiscoveryConfig;
+  frontContent: { page: { title: string; metaDescription: string; content: string } };
+  allPosts: BlogData[];
+  currentPage?: number;
+}
+
+const { category, frontContent, allPosts, currentPage = 1 } = Astro.props;
+const totalPages = getPageCount(allPosts.length);
+const posts = getPageItems(allPosts, currentPage);
+const featuredPost = resolveFeaturedCategoryPost(
+  allPosts,
+  category,
+  getDrupalFeaturedCategoryPosts(allPosts, category),
+);
+const popularTags = category.showPopularTopics ? getPopularTags(allPosts) : [];
+const isFirstPage = currentPage === 1;
+const pageTitle = isFirstPage ? frontContent.page.title : `${frontContent.page.title} posts – Page ${currentPage}`;
+const pageUrl = isFirstPage ? `/${category.slug}` : `/${category.slug}/page/${currentPage}`;
+const getPageUrl = (page: number) => page === 1 ? `/${category.slug}/` : `/${category.slug}/page/${page}/`;
+---
+
+<Layout title={pageTitle} metaDescription={frontContent.page.metaDescription} currentUrl={pageUrl}>
+  <div class="max-w-[1564px] mx-auto md:px-8-px">
+    <div class:list={["text-lt-gray dark:text-dk-gray px-4-px max-w-xl mx-auto md:px-8-px lg:max-w-4xl", isFirstPage ? "py-2 md:py-4" : "pt-4 pb-2 md:pt-8 md:pb-4"]}>
+      <h1 id="skip-target" class="block px-4-px font-bold text-center mt-6 lg:mt-10 mb-3 lg:mb-5 text-4xl md:text-5xl text-lt-gray-heading dark:text-dk-gray-heading">{pageTitle}</h1>
+      {isFirstPage && (
+        <div class="mx-4-px lead-content text-xl text-center mb-4 lg:mb-6 text-lt-gray dark:text-dk-gray"><Fragment set:html={frontContent.page.content} /></div>
+      )}
+    </div>
+  </div>
+
+  {isFirstPage && <CategoryFirstRead featuredPost={featuredPost} categoryName={category.name} />}
+  {isFirstPage && category.showPopularTopics && <TopicBrowse tags={popularTags} />}
+
+  <section class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mt-0 xl:mx-auto" slot="blogs" aria-label={`${category.name} blog posts`}>
+    <PostGrid posts={posts} />
+    <Pagination currentPage={currentPage} totalPages={totalPages} getPageUrl={getPageUrl} />
+  </section>
+</Layout>

@@ -154,3 +154,29 @@ ${fieldsBySet[fieldSet]}
     }
   `);
 }
+
+export async function fetchAllArticles({
+  category,
+  fieldSet,
+}: {
+  category?: number;
+  fieldSet: 'listing' | 'full' | 'rss';
+}) {
+  const batchSize = 100;
+  const items: unknown[] = [];
+
+  while (true) {
+    const response = await fetchArticles({
+      limit: batchSize,
+      offset: items.length,
+      category,
+      fieldSet,
+    });
+    const batch = response.articles.items;
+    items.push(...batch);
+
+    if (batch.length < batchSize) break;
+  }
+
+  return { articles: { items } };
+}

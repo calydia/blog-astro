@@ -98,6 +98,15 @@ const articles = [
     secondaryCategories: ['Games'],
     featuredCategoryPost: true,
   },
+  ...Array.from({ length: 10 }, (_, index) => ({
+    ...baseArticle,
+    id: String(110 + index),
+    title: `Accessibility archive post ${index + 1}`,
+    slug: `/accessibility-archive-post-${index + 1}`,
+    category: 'Accessibility',
+    date: `2025-${String(11 - index).padStart(2, '0')}-01T09:00:00.000Z`,
+    secondaryCategories: ['Accessibility'],
+  })),
 ];
 
 const categoryIds = {
@@ -146,9 +155,12 @@ function graphqlResponse(query) {
     const categoryMatch = query.match(/category:\s*(\d+)/);
     const category = categoryMatch ? categoryIds[Number(categoryMatch[1])] : undefined;
     const categoryItems = category ? articles.filter((article) => article.category === category) : articles;
-    const items = query.includes('featuredOnly: true')
+    const filteredItems = query.includes('featuredOnly: true')
       ? categoryItems.filter((article) => article.featuredCategoryPost)
       : categoryItems;
+    const limit = Number(query.match(/articles\(limit:\s*(\d+)/)?.[1] ?? filteredItems.length);
+    const offset = Number(query.match(/offset:\s*(\d+)/)?.[1] ?? 0);
+    const items = filteredItems.slice(offset, offset + limit);
     return { data: { articles: { items } } };
   }
 

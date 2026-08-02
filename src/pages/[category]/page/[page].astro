@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from 'astro';
+import CategoryArchivePage from '../../../components/CategoryArchivePage.astro';
+import type BlogData from '../../../interfaces/blogHighlight';
+import { fetchAllArticles, fetchPageContent } from '../../../utils/blogApi';
+import { categoryDiscoveryConfig } from '../../../utils/categoryDiscovery';
+import { getPageCount } from '../../../utils/pagination';
+
+export const getStaticPaths = (async () => {
+  const paths = await Promise.all(categoryDiscoveryConfig.map(async (category) => {
+    const [frontContent, postsResponse] = await Promise.all([
+      fetchPageContent(category.pageId),
+      fetchAllArticles({ category: category.drupalCategoryId, fieldSet: 'listing' }),
+    ]);
+    const allPosts = postsResponse.articles.items as BlogData[];
+
+    return Array.from({ length: Math.max(0, getPageCount(allPosts.length) - 1) }, (_, index) => ({
+      params: { category: category.slug, page: String(index + 2) },
+      props: { category, frontContent, allPosts, currentPage: index + 2 },
+    }));
+  }));
+
+  return paths.flat();
+}) satisfies GetStaticPaths;
+
+const { category, frontContent, allPosts, currentPage } = Astro.props;
+---
+
+<CategoryArchivePage
+  category={category}
+  frontContent={frontContent}
+  allPosts={allPosts}
+  currentPage={currentPage}
+/>

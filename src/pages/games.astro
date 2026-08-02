@@ -1,40 +1,15 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import NewestBlogListing from '../components/NewestBlogListing.astro';
-import OtherBlogListing from '../components/OtherBlogListing.astro';
-import CategoryFirstRead from '../components/CategoryFirstRead.astro';
+import CategoryArchivePage from '../components/CategoryArchivePage.astro';
 import type BlogData from '../interfaces/blogHighlight';
-import { fetchArticles, fetchPageContent } from '../utils/blogApi';
-import { getCategoryDiscoveryConfig, getDrupalFeaturedCategoryPosts, resolveFeaturedCategoryPost } from '../utils/categoryDiscovery';
+import { fetchAllArticles, fetchPageContent } from '../utils/blogApi';
+import { getCategoryDiscoveryConfig } from '../utils/categoryDiscovery';
 
-const frontContent = await fetchPageContent(4);
-const allPostsResponse = await fetchArticles({ limit: 101, category: 23, fieldSet: 'listing' });
+const category = getCategoryDiscoveryConfig('games')!;
+const [frontContent, allPostsResponse] = await Promise.all([
+  fetchPageContent(category.pageId),
+  fetchAllArticles({ category: category.drupalCategoryId, fieldSet: 'listing' }),
+]);
 const allPosts = allPostsResponse.articles.items as BlogData[];
-const newestPosts = allPosts.slice(0, 1);
-const otherPosts = allPosts.slice(1);
-const categoryConfig = getCategoryDiscoveryConfig('games');
-const featuredPost = categoryConfig
-  ? resolveFeaturedCategoryPost(allPosts, categoryConfig, getDrupalFeaturedCategoryPosts(allPosts, categoryConfig))
-  : undefined;
 ---
 
-<Layout title={ frontContent.page.title } metaDescription={ frontContent.page.metaDescription }
-  currentUrl="/games"
->
-  <div class="max-w-[1564px] mx-auto md:px-8-px">
-    <div class="text-lt-gray dark:text-dk-gray py-2 px-4-px max-w-xl mx-auto md:py-4 md:px-8-px lg:max-w-4xl">
-      <h1 id="skip-target" class="block px-4-px font-bold text-center mt-6 lg:mt-10 mb-3 lg:mb-5 text-4xl md:text-5xl text-lt-gray-heading dark:text-dk-gray-heading">{ frontContent.page.title }</h1>
-      <div class="mx-4-px lead-content text-xl text-center mb-4 lg:mb-6 text-lt-gray dark:text-dk-gray"><Fragment set:html={ frontContent.page.content } /></div>
-    </div>
-  </div>
-
-  <CategoryFirstRead featuredPost={featuredPost} categoryName="Games" />
-
-  <section class="max-w-7xl mx-4-px mb-8 md:mb-12 xl:mt-0 xl:mx-auto" slot="blogs" aria-label="Blog listing">
-    {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
-    <ul class="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8" role="list">
-      <NewestBlogListing posts={newestPosts} />
-      <OtherBlogListing posts={otherPosts} />
-    </ul>
-  </section> 
-</Layout>
+<CategoryArchivePage category={category} frontContent={frontContent} allPosts={allPosts} />
