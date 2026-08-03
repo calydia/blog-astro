@@ -41,6 +41,7 @@ type Props = Page & { relatedPosts: BlogData[]; featuredCategoryPost?: BlogData 
 const page = Astro.props as Props;
 const pageTags = normalizeSecondaryCategories(page.secondaryCategories);
 const processedArticle = buildArticleToc(page.content);
+const imageCredits = page.imageCredits?.trim();
 ---
 <LayoutPost title={ page.title } currentUrl={ `/${page.category.toLowerCase()}/${page.slug.substring(1)}` } currentSlug={ page.slug }
   metaDescription={ page.metaDescription } mainImage={ page.mainImage } date={page.date} authorImage={ page.authorImage } authorName={ page.authorName } authorContent={ page.authorContent }
@@ -61,6 +62,8 @@ const processedArticle = buildArticleToc(page.content);
     </div>
   : null }
   <div class="text-xl bodytext"><Fragment set:html={ processedArticle.content } /></div>
-  <div class="text-base credits"><Fragment set:html={`Image credit: ${page.imageCredits} `} /></div>
+  {imageCredits ? (
+    <div class="text-base credits"><Fragment set:html={`Image credit: ${imageCredits}`} /></div>
+  ) : null}
   <RelatedPosts posts={page.relatedPosts} />
 </LayoutPost>

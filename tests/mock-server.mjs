@@ -39,6 +39,7 @@ const articles = [
     title: 'A practical guide to accessibility testing',
     slug: '/accessibility-testing-guide',
     category: 'Accessibility',
+    imageCredits: null,
   },
   {
     ...baseArticle,

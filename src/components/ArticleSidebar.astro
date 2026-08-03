@@ -23,6 +23,7 @@ const {
 
 const sidebarRelatedPosts = relatedPosts.filter((post) => post.slug !== currentSlug).slice(0, 2);
 const showFeaturedCategoryPost = featuredCategoryPost && featuredCategoryPost.slug !== currentSlug;
+const displayCategoryName = categoryName.toLocaleLowerCase('en');
 ---
 
 <div class="grid gap-6">
@@ -33,9 +34,9 @@ const showFeaturedCategoryPost = featuredCategoryPost && featuredCategoryPost.sl
       {showFeaturedCategoryPost && (
         <div class="sidebar-block">
           <h2 class="sidebar-heading">
-            Start here in {categoryName}
+            Start here in {displayCategoryName}
           </h2>
-          <a href={`/${featuredCategoryPost.category.toLowerCase()}${featuredCategoryPost.slug}`} class="post-link no-underline">
+          <a href={`/${featuredCategoryPost.category.toLowerCase()}${featuredCategoryPost.slug}`}>
             <span class="post-title sidebar-link-title">{featuredCategoryPost.title}</span>
           </a>
         </div>
@@ -47,7 +48,7 @@ const showFeaturedCategoryPost = featuredCategoryPost && featuredCategoryPost.sl
           <ul class="m-0 p-0 grid gap-3" role="list">
             {sidebarRelatedPosts.map((post) => (
               <li>
-                <a href={`/${post.category.toLowerCase()}${post.slug}`} class="post-link no-underline">
+                <a href={`/${post.category.toLowerCase()}${post.slug}`}>
                   <span class="post-title sidebar-link-title">{post.title}</span>
                 </a>
               </li>
@@ -56,8 +57,9 @@ const showFeaturedCategoryPost = featuredCategoryPost && featuredCategoryPost.sl
         </div>
       )}
 
-      <a href={`/${categoryUrl}`} class="sidebar-category-link no-underline">
-        Browse {categoryName} posts
+      <hr class="sidebar-category-divider" />
+      <a href={`/${categoryUrl}`} class="sidebar-category-link">
+        Browse {displayCategoryName} posts
       </a>
     </section>
   )}
@@ -110,19 +112,16 @@ const showFeaturedCategoryPost = featuredCategoryPost && featuredCategoryPost.sl
   }
 
   .sidebar-category-link {
-    display: block;
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 2px solid currentColor;
+    display: inline-block;
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
   }
 
-  .sidebar-category-link:hover,
-  .sidebar-category-link:focus-visible {
-    text-decoration: underline;
-    text-underline-offset: 0.25rem;
+  .sidebar-category-divider {
+    margin: 1.5rem 0 1rem;
+    border: 0;
+    border-top: 2px solid currentColor;
   }
 
   .sidebar-author-copy :global(p) {

@@ -9,7 +9,7 @@ export default interface Page {
   content: string,
   date: string,
   id: string,
-  imageCredits: string,
+  imageCredits?: string | null,
   slug: string,
   published: string,
   mainImage: string,
