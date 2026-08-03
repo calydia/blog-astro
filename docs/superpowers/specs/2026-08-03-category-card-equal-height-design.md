@@ -10,6 +10,8 @@ Remove `self-start` from the root element of `CategorySpotlightCard.astro`. The 
 
 The primary and secondary card grids remain independent, and cards in different rows are not forced to share a height. Mobile single-column cards continue to use their natural row height. No fixed or minimum heights will be introduced.
 
+Change the recommended-post wrapper from vertical margin on both sides to top margin only: preserve its existing `1rem` top margin and set its bottom margin to zero. Its border, padding, and internal spacing remain unchanged, preventing unnecessary space at the bottom of the card.
+
 ## Verification
 
 Run the production build and existing tests. Confirm from the rendered homepage that cards sharing a multi-column grid row have matching heights at the applicable responsive breakpoints.
