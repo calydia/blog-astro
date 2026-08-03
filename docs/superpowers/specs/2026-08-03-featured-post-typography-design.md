@@ -14,9 +14,9 @@ Refine the typography of featured-post treatments on the homepage category cards
 
 ## Category page highlight
 
-- Render the “New here? Read this first” label in normal casing.
-- Use normal letter spacing for the label.
-- Match the highlighted article heading's responsive typography to the standard article-card heading: 18px with a 1.75rem line-height by default, and 24px with a 2rem line-height from the medium breakpoint.
+- Render the “New here? Read this first” label in normal casing and with normal letter spacing.
+- Size the label at 18px with a 1.75rem line-height by default, and 24px with a 2rem line-height from the medium breakpoint.
+- Match the highlighted article heading's responsive typography to the homepage category-card recommended-post link: `text-sm` by default and `text-base` at the large breakpoint, with a `1.5` line-height.
 - Preserve the highlight heading's existing font weight, link behavior, and surrounding card presentation.
 
 ## Implementation and verification
