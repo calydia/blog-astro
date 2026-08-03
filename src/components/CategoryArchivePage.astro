@@ -28,11 +28,14 @@ const featuredPost = resolveFeaturedCategoryPost(
 const popularTags = category.showPopularTopics ? getPopularTags(allPosts) : [];
 const isFirstPage = currentPage === 1;
 const pageTitle = isFirstPage ? frontContent.page.title : `${frontContent.page.title} posts – Page ${currentPage}`;
+const metaDescription = isFirstPage
+  ? frontContent.page.metaDescription
+  : `Page ${currentPage}: ${frontContent.page.metaDescription.trim()}`;
 const pageUrl = isFirstPage ? `/${category.slug}` : `/${category.slug}/page/${currentPage}`;
 const getPageUrl = (page: number) => page === 1 ? `/${category.slug}/` : `/${category.slug}/page/${page}/`;
 ---
 
-<Layout title={pageTitle} metaDescription={frontContent.page.metaDescription} currentUrl={pageUrl}>
+<Layout title={pageTitle} metaDescription={metaDescription} currentUrl={pageUrl}>
   <div class="max-w-[1564px] mx-auto md:px-8-px">
     <div class:list={["text-lt-gray dark:text-dk-gray px-4-px max-w-xl mx-auto md:px-8-px lg:max-w-4xl", isFirstPage ? "py-2 md:py-4" : "pt-4 pb-2 md:pt-8 md:pb-4"]}>
       <h1 id="skip-target" class="block px-4-px font-bold text-center mt-6 lg:mt-10 mb-3 lg:mb-5 text-4xl md:text-5xl text-lt-gray-heading dark:text-dk-gray-heading">{pageTitle}</h1>
