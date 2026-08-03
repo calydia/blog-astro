@@ -16,12 +16,12 @@ const {
     aria-labelledby="category-first-read-heading"
     class="card-cover relative max-w-7xl mx-4-px mb-6 md:mb-8 xl:mx-auto border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white p-5 lg:px-6 lg:py-5"
   >
-    <p class="first-read-label uppercase tracking-[0.16em] text-sm font-semibold text-lt-gray-box dark:text-dk-gray">
+    <p class="first-read-label normal-case tracking-normal text-[18px] leading-7 font-semibold md:text-[24px] md:leading-8 text-lt-gray-box dark:text-dk-gray">
       {label}
     </p>
-    <h2 id="category-first-read-heading" class="m-0! text-2xl lg:text-3xl">
-      <a href={`/${featuredPost.category.toLowerCase()}${featuredPost.slug}`} class="card-cover__link post-link no-underline">
-        <span class="post-title">{featuredPost.title}</span>
+    <h2 id="category-first-read-heading" class="m-0! text-sm lg:text-base leading-normal">
+      <a href={`/${featuredPost.category.toLowerCase()}${featuredPost.slug}`} class="card-cover__link underline underline-offset-4">
+        <span class="post-title">{featuredPost.title}</span><span aria-hidden="true"> →</span>
       </a>
     </h2>
   </section>

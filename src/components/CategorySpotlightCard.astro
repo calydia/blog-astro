@@ -15,7 +15,7 @@ const categoryUrl = `/${category.slug}`;
 ---
 
 <article class:list={[
-  'card-cover group relative self-start border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white transition-transform motion-reduce:transition-none hover:-translate-y-1 focus-within:-translate-y-1',
+  'card-cover group relative border-solid border-4 gradient-border-light bg-lt-blue-light text-lt-gray dark:gradient-border-dark dark:bg-dk-purple dark:text-white transition-transform motion-reduce:transition-none hover:-translate-y-1 focus-within:-translate-y-1',
   isPrimary ? 'p-4 lg:p-5' : 'p-4',
 ]}>
   <div class="grid gap-0">
@@ -25,14 +25,14 @@ const categoryUrl = `/${category.slug}`;
       </a>
     </h2>
     <p class="my-4 text-base leading-snug">{category.description}</p>
-    <div class="my-4 border-t border-lt-purple/50 pt-1 dark:border-dk-blue-light/50">
-      <p class="my-0 text-xs font-semibold uppercase tracking-[0.1em] leading-tight text-lt-gray-box dark:text-dk-gray">
+    <div class="mt-4 mb-0 border-t border-lt-purple/50 pt-1 dark:border-dk-blue-light/50">
+      <p class="mt-2 mb-0 text-sm lg:text-base font-normal normal-case tracking-normal leading-tight text-lt-gray-box dark:text-dk-gray">
         Recommended post
       </p>
       {featuredPost ? (
         <a
           href={`/${featuredPost.category.toLowerCase()}${featuredPost.slug}`}
-          class="relative z-20 inline-block mt-0.5 text-sm lg:text-base font-semibold leading-tight text-lt-blue-dark dark:text-dk-blue-light underline underline-offset-4"
+          class="relative z-20 inline-block mt-0.5 text-sm lg:text-base font-semibold leading-normal text-lt-blue-dark dark:text-dk-blue-light underline underline-offset-4"
         >
           {featuredPost.title}<span aria-hidden="true"> →</span>
         </a>
